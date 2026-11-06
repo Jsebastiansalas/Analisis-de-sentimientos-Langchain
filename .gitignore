@@ -1,0 +1,22 @@
+# Entorno virtual y dependencias
+.venv/
+venv/
+env/
+
+# Variables de entorno secretas (NUNCA subir claves de API al repositorio)
+.env
+
+# Archivos compilados y caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos temporales de escritura atómica
+*.tmp
+datos/*.tmp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+__MACOSX/
+test_sandbox_datos/
