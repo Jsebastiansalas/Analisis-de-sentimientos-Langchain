@@ -128,7 +128,7 @@ def crear_prompt_analisis() -> ChatPromptTemplate:
 
     humano = (
         "Figura política seleccionada: {jugador}\n"
-        "Opinión del aficionado:\n{opinion}"
+        "Opinión del ciudadano:\n{opinion}"
     )
 
     return ChatPromptTemplate.from_messages([

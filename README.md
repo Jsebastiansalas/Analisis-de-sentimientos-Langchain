@@ -185,32 +185,32 @@ Ambos contenedores compartirán el volumen `./datos:/app/datos`, lo que signific
 
 ---
 
-## 👥 Catálogo Oficial de Figuras Políticas
+## 👥 Catálogo Oficial de Presidentes y Líderes
 
-El archivo `datos/politicos.json` incluye 20 figuras prominentes de la historia y política colombiana con identificadores únicos (`p001` a `p020`):
+El archivo `datos/politicos.json` incluye mandatarios de la historia de Colombia junto a Abelardo de la Espriella con identificadores únicos (`p001` a `p020`):
 
 | ID | Nombre | Rol / Cargo |
 | :---: | :--- | :--- |
-| `p001` | Gustavo Petro Urrego | Presidente de Colombia (2022-2026) |
-| `p002` | Álvaro Uribe Vélez | Expresidente de Colombia (2002-2010) |
-| `p003` | Juan Manuel Santos Calderón | Expresidente y Premio Nobel de Paz |
-| `p004` | Iván Duque Márquez | Expresidente de Colombia (2018-2022) |
-| `p005` | Claudia López Hernández | Exalcaldesa Mayor de Bogotá |
-| `p006` | Sergio Fajardo Valderrama | Exgobernador de Antioquia y Exalcalde |
-| `p007` | Francia Márquez Mina | Vicepresidenta de la República |
-| `p008` | Rodolfo Hernández Suárez | Exalcalde de Bucaramanga y Excandidato |
-| `p009` | Federico Gutiérrez Zuluaga | Alcalde de Medellín |
-| `p010` | Alejandro Char Chaljub | Alcalde de Barranquilla |
-| `p011` | Antanas Mockus Šivickas | Exalcalde de Bogotá y Pedagogo |
-| `p012` | Luis Carlos Galán Sarmiento | Líder del Nuevo Liberalismo |
-| `p013` | María José Pizarro Rodríguez | Senadora de la República |
-| `p014` | Miguel Uribe Turbay | Senador de la República |
-| `p015` | Paloma Valencia Laserna | Senadora de la República |
-| `p016` | Humberto de la Calle Lombana | Exvicepresidente y Jefe Negociador de Paz |
-| `p017` | Jorge Robledo Castillo | Exsenador y Académico |
-| `p018` | Carlos Fernando Galán Pachón | Alcalde Mayor de Bogotá |
-| `p019` | David Racero Mayorca | Representante a la Cámara |
-| `p020` | Cathy Juvinao Clavijo | Representante a la Cámara |
+| `p001` | Gustavo Petro Urrego | Presidente de la República (2022-2026) |
+| `p002` | Álvaro Uribe Vélez | Expresidente de la República (2002-2010) |
+| `p003` | Juan Manuel Santos Calderón | Expresidente y Premio Nobel de Paz (2010-2018) |
+| `p004` | Iván Duque Márquez | Expresidente de la República (2018-2022) |
+| `p005` | Andrés Pastrana Arango | Expresidente de la República (1998-2002) |
+| `p006` | Ernesto Samper Pizano | Expresidente de la República (1994-1998) |
+| `p007` | César Gaviria Trujillo | Expresidente de la República (1990-1994) |
+| `p008` | Virgilio Barco Vargas | Expresidente de la República (1986-1990) |
+| `p009` | Belisario Betancur Cuartas | Expresidente de la República (1982-1986) |
+| `p010` | Julio César Turbay Ayala | Expresidente de la República (1978-1982) |
+| `p011` | Alfonso López Michelsen | Expresidente de la República (1974-1978) |
+| `p012` | Misael Pastrana Borrero | Expresidente de la República (1970-1974) |
+| `p013` | Carlos Lleras Restrepo | Expresidente de la República (1966-1970) |
+| `p014` | Guillermo León Valencia | Expresidente de la República (1962-1966) |
+| `p015` | Alberto Lleras Camargo | Expresidente de la República (1945-1946, 1958-1962) |
+| `p016` | Gustavo Rojas Pinilla | Expresidente de facto de Colombia (1953-1957) |
+| `p017` | Laureano Gómez Castro | Expresidente de la República (1950-1951) |
+| `p018` | Mariano Ospina Pérez | Expresidente de la República (1946-1950) |
+| `p019` | Alfonso López Pumarejo | Expresidente de la República (1934-1938, 1942-1945) |
+| `p020` | Abelardo de la Espriella | Abogado, Analista Político y Precandidato Presidencial |
 
 ---
 

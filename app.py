@@ -247,7 +247,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #cdffdc;'>👤 FIGURAS POLÍTICAS</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #cdffdc;'>👤 PRESIDENTES & LÍDERES</p>", unsafe_allow_html=True)
     
     # Formateo enriquecido con rol
     opciones_jugador = {}
@@ -256,7 +256,7 @@ with st.sidebar:
         opciones_jugador[etiqueta] = j
     
     seleccion_etiqueta = st.selectbox(
-        "Selecciona la figura política objetivo:",
+        "Selecciona el presidente o figura a opinar:",
         options=list(opciones_jugador.keys()),
         help="La opinión enviada se vinculará de forma atómica a esta figura pública."
     )
@@ -345,7 +345,7 @@ st.markdown("""
         </div>
         <div>
             <h1 style="font-size: 1.6rem; font-weight: 800; color: #d4e4fa; margin: 0; line-height: 1.2;">Ágora Colombia</h1>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; font-family: 'Inter';">Barómetro de Percepción Ciudadana y Análisis de Sentimiento Político con IA</p>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; font-family: 'Inter';">Barómetro de Percepción sobre Presidentes de Colombia y Abelardo de la Espriella</p>
         </div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center;">
