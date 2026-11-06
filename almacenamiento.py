@@ -12,8 +12,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 # Definición de rutas base relativas a la ubicación de este archivo.
-# Esto asegura que la app funcione sin importar desde qué directorio se ejecute en la terminal.
+# Soporta tanto el catálogo de figuras políticas como de futbolistas para máxima versatilidad.
 BASE_DIR = Path(__file__).resolve().parent
+RUTA_POLITICOS = BASE_DIR / "datos" / "politicos.json"
 RUTA_JUGADORES = BASE_DIR / "datos" / "jugadores.json"
 RUTA_OPINIONES = BASE_DIR / "datos" / "opiniones.json"
 VERSION_PROMPT = "1.0"
@@ -21,24 +22,24 @@ VERSION_PROMPT = "1.0"
 
 def cargar_jugadores(ruta: Optional[Path | str] = None) -> List[Dict[str, str]]:
     """
-    Carga y valida el catálogo de futbolistas desde el archivo JSON.
+    Carga y valida el catálogo de figuras públicas (políticos o futbolistas) desde el archivo JSON.
     
     Verificaciones:
     - Que el archivo exista y sea un JSON sintácticamente válido.
-    - Que contenga la clave 'jugadores'.
-    - Que no existan identificadores ('id') duplicados entre los jugadores.
+    - Que contenga la clave 'politicos' o 'jugadores'.
+    - Que no existan identificadores ('id') duplicados en el catálogo.
     
     Retorna:
-        Lista de diccionarios con la información de cada jugador.
-    
-    Lanza:
-        FileNotFoundError: Si el archivo no existe.
-        ValueError: Si el formato es inválido o se detectan IDs duplicados.
+        Lista de diccionarios con la información de cada figura.
     """
-    ruta_archivo = Path(ruta) if ruta else RUTA_JUGADORES
+    if ruta:
+        ruta_archivo = Path(ruta)
+    else:
+        # Priorizar el catálogo de políticos si existe, de lo contrario usar jugadores
+        ruta_archivo = RUTA_POLITICOS if RUTA_POLITICOS.exists() else RUTA_JUGADORES
 
     if not ruta_archivo.exists():
-        raise FileNotFoundError(f"No se encontró el catálogo de jugadores en: {ruta_archivo}")
+        raise FileNotFoundError(f"No se encontró el catálogo en: {ruta_archivo}")
 
     try:
         with open(ruta_archivo, "r", encoding="utf-8") as f:
@@ -46,25 +47,32 @@ def cargar_jugadores(ruta: Optional[Path | str] = None) -> List[Dict[str, str]]:
     except json.JSONDecodeError as e:
         raise ValueError(f"El archivo {ruta_archivo} no contiene un JSON válido: {e}")
 
-    if not isinstance(data, dict) or "jugadores" not in data:
-        raise ValueError("El catálogo debe contener un objeto con la clave 'jugadores'.")
+    # Soporte para ambas claves de catálogo: 'politicos' o 'jugadores'
+    clave_catalogo = "politicos" if "politicos" in data else "jugadores"
 
-    jugadores = data["jugadores"]
-    if not isinstance(jugadores, list):
-        raise ValueError("La clave 'jugadores' debe ser una lista.")
+    if not isinstance(data, dict) or clave_catalogo not in data:
+        raise ValueError(f"El catálogo debe contener un objeto con la clave '{clave_catalogo}'.")
+
+    figuras = data[clave_catalogo]
+    if not isinstance(figuras, list):
+        raise ValueError(f"La clave '{clave_catalogo}' debe ser una lista.")
 
     # Validación de identificadores únicos
     ids_vistos = set()
-    for j in jugadores:
-        if not isinstance(j, dict) or "id" not in j or "nombre" not in j or "pais" not in j:
-            raise ValueError(f"Jugador con estructura inválida encontrado: {j}")
+    for j in figuras:
+        if not isinstance(j, dict) or "id" not in j or "nombre" not in j:
+            raise ValueError(f"Elemento con estructura inválida encontrado: {j}")
         
         j_id = j["id"]
         if j_id in ids_vistos:
-            raise ValueError(f"Identificador de jugador duplicado detectado: '{j_id}'")
+            raise ValueError(f"Identificador duplicado detectado: '{j_id}'")
         ids_vistos.add(j_id)
 
-    return jugadores
+    return figuras
+
+
+# Alias explícito para máxima claridad en el código
+cargar_politicos = cargar_jugadores
 
 
 def cargar_opiniones(ruta: Optional[Path | str] = None) -> Dict[str, Any]:

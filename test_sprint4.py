@@ -51,14 +51,16 @@ class TestSprint4(unittest.TestCase):
             self.assertTrue(len(op["opinion_original"]) >= 5)
             self.assertTrue(len(op["razon"]) >= 1)
             self.assertEqual(op["version_prompt"], "1.0")
-            self.assertEqual(op["modelo"], "gpt-4o-mini")
+            self.assertIn(op["modelo"], ("gemini-2.5-flash", "gpt-4o-mini"))
         print("[OK] Test 4 superado: Todos los registros tienen UUID válido, fecha UTC y metadatos completos.")
 
     def test_05_sincronizacion_metricas_consulta(self):
         """Verifica que el recuento de categorías coincida exactamente con el total filtrado."""
-        # Filtrar por un jugador (ej: Messi)
-        filtradas = consultar_opiniones(self.opiniones, jugador_id="j001")
+        # Filtrar dinámicamente por la primera figura con opiniones registradas
+        id_prueba = self.opiniones[0]["jugador_id"]
+        filtradas = consultar_opiniones(self.opiniones, jugador_id=id_prueba)
         total = len(filtradas)
+        self.assertGreater(total, 0, f"Se esperaban opiniones para la figura con ID {id_prueba}")
         conteo_pos = sum(1 for op in filtradas if op["sentimiento"] == "positivo")
         conteo_neg = sum(1 for op in filtradas if op["sentimiento"] == "negativo")
         conteo_neu = sum(1 for op in filtradas if op["sentimiento"] == "neutro")

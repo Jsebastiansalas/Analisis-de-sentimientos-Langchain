@@ -31,8 +31,8 @@ load_dotenv()
 
 # Configuración visual de la página
 st.set_page_config(
-    page_title="Tribuna Global - AI Sports Fan Sentiment Telemetry",
-    page_icon="⚽",
+    page_title="Ágora Colombia - Barómetro de Percepción Ciudadana",
+    page_icon="🇨🇴",
     layout="wide"
 )
 
@@ -236,45 +236,43 @@ with st.sidebar:
     st.markdown("""
     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
         <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(0,245,155,0.12); border: 1px solid rgba(0,245,155,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 0 15px rgba(0,245,155,0.25);">
-            ⚽
+            🇨🇴
         </div>
         <div>
-            <div style="font-family: 'Outfit'; font-size: 1.3rem; font-weight: 800; color: #00F59B; line-height: 1.1; letter-spacing: -0.02em;">Tribuna Global</div>
-            <div style="font-size: 0.68rem; font-family: 'Inter'; font-weight: 700; color: #94a3b8; letter-spacing: 0.08em; text-transform: uppercase;">AI Fan Sentiment Telemetry</div>
+            <div style="font-family: 'Outfit'; font-size: 1.3rem; font-weight: 800; color: #00F59B; line-height: 1.1; letter-spacing: -0.02em;">Ágora Colombia</div>
+            <div style="font-size: 0.68rem; font-family: 'Inter'; font-weight: 700; color: #94a3b8; letter-spacing: 0.08em; text-transform: uppercase;">Barómetro de Percepción Ciudadana</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #cdffdc;'>👤 PLANTEL DE FIGURAS</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #cdffdc;'>👤 FIGURAS POLÍTICAS</p>", unsafe_allow_html=True)
     
-    # Formateo enriquecido con bandera
+    # Formateo enriquecido con rol
     opciones_jugador = {}
     for j in catalogo_jugadores:
-        bandera = BANDERAS.get(j["pais"], "🌐")
-        etiqueta = f"{bandera} {j['nombre']} ({j['pais']})"
+        etiqueta = f"🇨🇴 {j['nombre']} ({j.get('rol', j['pais'])})"
         opciones_jugador[etiqueta] = j
     
     seleccion_etiqueta = st.selectbox(
-        "Selecciona el futbolista objetivo:",
+        "Selecciona la figura política objetivo:",
         options=list(opciones_jugador.keys()),
-        help="La opinión enviada se vinculará de forma atómica a este futbolista."
+        help="La opinión enviada se vinculará de forma atómica a esta figura pública."
     )
     jugador_seleccionado = opciones_jugador[seleccion_etiqueta]
-    bandera_sel = BANDERAS.get(jugador_seleccionado["pais"], "🌐")
     
-    # Tarjeta de perfil Stitch del jugador seleccionado
+    # Tarjeta de perfil Stitch del político seleccionado
     st.markdown(f"""
     <div style="background: rgba(1, 15, 31, 0.7); border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 10px; padding: 12px; margin-top: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 1.4rem;">{bandera_sel}</span>
+            <span style="font-size: 1.4rem;">🇨🇴</span>
             <span style="background: rgba(0, 245, 155, 0.15); color: #00F59B; border: 1px solid rgba(0, 245, 155, 0.3); font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">MONITOR ACTIVO</span>
         </div>
         <div style="font-family: 'Outfit'; font-weight: 700; font-size: 1.05rem; color: #d4e4fa; margin-top: 4px;">{jugador_seleccionado['nombre']}</div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #94a3b8; font-family: 'Inter'; margin-top: 4px;">
-            <span>ID: <code style="color: #00d2ff;">{jugador_seleccionado['id']}</code></span>
-            <span>{jugador_seleccionado['pais']}</span>
+        <div style="font-size: 0.72rem; color: #94a3b8; font-family: 'Inter'; margin-top: 4px;">
+            <span>ID: <code style="color: #00d2ff;">{jugador_seleccionado['id']}</code></span> • 
+            <span>{jugador_seleccionado.get('rol', 'Colombia')}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -343,11 +341,11 @@ st.markdown("""
 <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(1, 15, 31, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px 24px; margin-bottom: 20px;">
     <div style="display: flex; align-items: center; gap: 14px;">
         <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(0, 245, 155, 0.15); border: 1px solid rgba(0, 245, 155, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; box-shadow: 0 0 20px rgba(0,245,155,0.25);">
-            ⚽
+            🇨🇴
         </div>
         <div>
-            <h1 style="font-size: 1.6rem; font-weight: 800; color: #d4e4fa; margin: 0; line-height: 1.2;">Tribuna Global</h1>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; font-family: 'Inter';">Plataforma de Percepción Fanática y Auditoría de Sentimiento Deportivo con IA</p>
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: #d4e4fa; margin: 0; line-height: 1.2;">Ágora Colombia</h1>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; font-family: 'Inter';">Barómetro de Percepción Ciudadana y Análisis de Sentimiento Político con IA</p>
         </div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center;">

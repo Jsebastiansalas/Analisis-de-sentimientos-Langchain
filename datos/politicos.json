@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "politicos": [
+    {"id": "p001", "nombre": "Gustavo Petro Urrego", "pais": "Colombia", "rol": "Presidente de la República (2022-2026)"},
+    {"id": "p002", "nombre": "Álvaro Uribe Vélez", "pais": "Colombia", "rol": "Expresidente de la República (2002-2010)"},
+    {"id": "p003", "nombre": "Juan Manuel Santos", "pais": "Colombia", "rol": "Expresidente y Nobel de Paz (2010-2018)"},
+    {"id": "p004", "nombre": "Claudia López Hernández", "pais": "Colombia", "rol": "Exalcaldesa Mayor de Bogotá"},
+    {"id": "p005", "nombre": "Sergio Fajardo Valderrama", "pais": "Colombia", "rol": "Exgobernador de Antioquia y Académico"},
+    {"id": "p006", "nombre": "Francia Márquez Mina", "pais": "Colombia", "rol": "Vicepresidenta de la República y Líder Social"},
+    {"id": "p007", "nombre": "Iván Duque Márquez", "pais": "Colombia", "rol": "Expresidente de la República (2018-2022)"},
+    {"id": "p008", "nombre": "Federico Gutiérrez Zuluaga", "pais": "Colombia", "rol": "Alcalde de Medellín"},
+    {"id": "p009", "nombre": "Alejandro Gaviria Uribe", "pais": "Colombia", "rol": "Exministro de Salud y Educación"},
+    {"id": "p010", "nombre": "Jorge Eliécer Gaitán", "pais": "Colombia", "rol": "Figura Histórica • Líder Popular Liberal"},
+    {"id": "p011", "nombre": "Luis Carlos Galán Sarmiento", "pais": "Colombia", "rol": "Figura Histórica • Fundador Nuevo Liberalismo"},
+    {"id": "p012", "nombre": "Antanas Mockus Šivickas", "pais": "Colombia", "rol": "Exalcalde de Bogotá y Filósofo Ciudadano"},
+    {"id": "p013", "nombre": "María Fernanda Cabal", "pais": "Colombia", "rol": "Senadora de la República"},
+    {"id": "p014", "nombre": "Humberto de la Calle Lombana", "pais": "Colombia", "rol": "Senador y Jefe Negociador de Paz"},
+    {"id": "p015", "nombre": "César Gaviria Trujillo", "pais": "Colombia", "rol": "Expresidente de la República (1990-1994)"},
+    {"id": "p016", "nombre": "Belisario Betancur Cuartas", "pais": "Colombia", "rol": "Figura Histórica • Expresidente (1982-1986)"},
+    {"id": "p017", "nombre": "Carlos Pizarro Leongómez", "pais": "Colombia", "rol": "Figura Histórica • Comandante y Firmante de Paz"},
+    {"id": "p018", "nombre": "Alfonso López Pumarejo", "pais": "Colombia", "rol": "Figura Histórica • 'Revolución en Marcha'"},
+    {"id": "p019", "nombre": "Roy Barreras Montealegre", "pais": "Colombia", "rol": "Diplomático y Expresidente del Senado"},
+    {"id": "p020", "nombre": "Rodolfo Hernández Suárez", "pais": "Colombia", "rol": "Excandidato Presidencial y Exalcalde"}
+  ]
+}

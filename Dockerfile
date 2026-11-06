@@ -7,8 +7,8 @@
 FROM python:3.11-slim
 
 # Metadatos del proyecto
-LABEL maintainer="Tribuna Global Team"
-LABEL description="Chatbot de Percepción de Futbolistas con Streamlit, LangChain y Salida Estructurada"
+LABEL maintainer="Ágora Colombia Team"
+LABEL description="Barómetro de Percepción Ciudadana sobre Figuras Políticas Colombianas con Multi-Frontend (FastAPI + Tailwind SPA y Streamlit)"
 
 # 2. Variables de entorno de Python y Streamlit
 # - PYTHONUNBUFFERED: Los prints y logs aparecen en la terminal en tiempo real sin demoras
@@ -47,8 +47,8 @@ RUN chown -R appuser:appuser /app
 # 9. Cambiar al usuario seguro
 USER appuser
 
-# 10. Puerto de Streamlit
-EXPOSE 8501
+# 10. Puertos de Streamlit (8501) y FastAPI (8000)
+EXPOSE 8501 8000
 
 # 11. Healthcheck para verificar que la aplicación esté respondiendo
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

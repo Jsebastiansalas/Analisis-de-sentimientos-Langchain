@@ -1,19 +1,32 @@
 version: '3.8'
 
 services:
-  tribuna_global:
+  # Servicio 1: Frontend Moderno SPA (FastAPI + HTML5 + Tailwind CSS + Chart.js)
+  agora_web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: tribuna_global_app
+    container_name: agora_colombia_web
+    command: ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
     ports:
-      - "8501:8501"
-    # Inyecta las variables de entorno desde el archivo .env local
+      - "8000:8000"
     env_file:
       - .env
-    # PERSISTENCIA CRÍTICA:
-    # Mapea la carpeta ./datos del host a /app/datos del contenedor.
-    # Así las opiniones guardadas nunca se pierden aunque se apague o elimine el contenedor.
+    volumes:
+      - ./datos:/app/datos
+    restart: unless-stopped
+
+  # Servicio 2: Chatbot y Tablero de Control Académico en Streamlit
+  agora_streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agora_colombia_streamlit
+    command: ["streamlit", "run", "app.py"]
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
     volumes:
       - ./datos:/app/datos
     restart: unless-stopped
