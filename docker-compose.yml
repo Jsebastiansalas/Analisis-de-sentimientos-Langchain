@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  tribuna_global:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tribuna_global_app
+    ports:
+      - "8501:8501"
+    # Inyecta las variables de entorno desde el archivo .env local
+    env_file:
+      - .env
+    # PERSISTENCIA CRÍTICA:
+    # Mapea la carpeta ./datos del host a /app/datos del contenedor.
+    # Así las opiniones guardadas nunca se pierden aunque se apague o elimine el contenedor.
+    volumes:
+      - ./datos:/app/datos
+    restart: unless-stopped

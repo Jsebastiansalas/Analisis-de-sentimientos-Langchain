@@ -92,11 +92,29 @@ OPENAI_MODEL=gpt-4o-mini
 
 ## 🖥️ Ejecución de la Aplicación
 
-Para iniciar el servidor local de Streamlit:
+### Opción A: Ejecución Local en Python
 ```bash
 streamlit run app.py
 ```
+O con el ejecutable específico:
+```powershell
+py -3.14 -m streamlit run app.py
+```
 La aplicación se abrirá automáticamente en tu navegador web en `http://localhost:8501`.
+
+### Opción B: Ejecución con Docker & Docker Compose 🐳
+El proyecto está completamente contenedorizado y optimizado para producción.
+
+1. **Construir y levantar con Docker Compose (Recomendado):**
+   ```bash
+   docker compose up --build
+   ```
+2. **O construir y ejecutar manualmente con Docker CLI:**
+   ```bash
+   docker build -t tribuna_global .
+   docker run -p 8501:8501 --env-file .env -v "${PWD}/datos:/app/datos" tribuna_global
+   ```
+> **Nota de Persistencia en Docker:** El volumen `-v ./datos:/app/datos` garantiza que todas las opiniones nuevas y el catálogo de futbolistas se mantengan guardados permanentemente en tu disco duro físico, incluso si el contenedor se apaga o se borra.
 
 ---
 

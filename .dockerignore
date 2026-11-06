@@ -1,0 +1,28 @@
+# Control de versiones
+.git/
+.gitignore
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Variables de entorno secretas (Se inyectan en tiempo de ejecución, NO se queman en la imagen)
+.env
+
+# Caché y compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos temporales de escritura atómica y sandboxes de test
+*.tmp
+datos/*.tmp
+test_sandbox_datos/
+test_sandbox_sprint3/
+
+# Basura del sistema operativo y copias de clase
+__MACOSX/
+intermedio/
+.DS_Store
+Thumbs.db
