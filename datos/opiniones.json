@@ -1,4 +1,137 @@
 {
   "version": 1,
-  "opiniones": []
+  "opiniones": [
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d851",
+      "fecha_utc": "2026-11-06T10:15:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Su visión de juego y sus pases filtrados entre líneas son simplemente extraordinarios.",
+      "sentimiento": "positivo",
+      "razon": "Expresa admiración y elogio categórico hacia la visión de juego y capacidad de pase del futbolista.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d852",
+      "fecha_utc": "2026-11-06T10:20:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Su rendimiento físico en los últimos minutos fue decepcionante y caminó la cancha.",
+      "sentimiento": "negativo",
+      "razon": "Presenta una crítica directa a su esfuerzo físico y actitud en los tramos finales del encuentro.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d853",
+      "fecha_utc": "2026-11-06T10:25:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Tiene una calidad técnica innegable, pero su nulo repliegue defensivo deja vulnerable al equipo.",
+      "sentimiento": "mixto",
+      "razon": "Combina un elogio a su habilidad técnica con un reproche evidente hacia su compromiso en defensa.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d854",
+      "fecha_utc": "2026-11-06T10:30:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Su ética de trabajo, disciplina y mentalidad ganadora son un ejemplo para todos los deportistas.",
+      "sentimiento": "positivo",
+      "razon": "Destaca de manera positiva los valores profesionales, disciplina y determinación del jugador.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d855",
+      "fecha_utc": "2026-11-06T10:35:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Su excesivo individualismo frena el juego colectivo y perjudica la fluidez del equipo.",
+      "sentimiento": "negativo",
+      "razon": "Cuestiona críticamente su tendencia personalista y el impacto negativo que genera en la dinámica grupal.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d856",
+      "fecha_utc": "2026-11-06T10:40:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Es un goleador implacable dentro del área, aunque su actitud de queja constante hacia sus compañeros desmotiva.",
+      "sentimiento": "mixto",
+      "razon": "Reconoce su gran efectividad ofensiva pero simultáneamente censura sus gestos y reproches hacia el plantel.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d857",
+      "fecha_utc": "2026-11-06T10:45:00+00:00",
+      "jugador_id": "j004",
+      "jugador_nombre": "Kylian Mbappé",
+      "opinion_original": "Su aceleración con pelota dominada y potencia física marcan una diferencia abrumadora frente a cualquier lateral.",
+      "sentimiento": "positivo",
+      "razon": "Subraya elogiosamente la potencia física y la capacidad de desequilibrio individual del delantero.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d858",
+      "fecha_utc": "2026-11-06T10:50:00+00:00",
+      "jugador_id": "j004",
+      "jugador_nombre": "Kylian Mbappé",
+      "opinion_original": "Es un delantero que compite en el fútbol europeo y nació en el año 1998.",
+      "sentimiento": "neutro",
+      "razon": "Contiene datos puramente biográficos y fácticos, sin emitir juicios de valor favorables o desfavorables.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d859",
+      "fecha_utc": "2026-11-06T10:55:00+00:00",
+      "jugador_id": "j004",
+      "jugador_nombre": "Kylian Mbappé",
+      "opinion_original": "Es letal cuando tiene espacios abiertos para correr, pero le cuesta asociarse en espacios reducidos cuando el rival se repliega.",
+      "sentimiento": "mixto",
+      "razon": "Pondera su peligrosidad en contragolpe a la vez que señala limitaciones técnicas en ataque posicional.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d860",
+      "fecha_utc": "2026-11-06T11:00:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Su capacidad de desborde y sacrificio incansable por la banda lo convierten en una pieza fundamental.",
+      "sentimiento": "positivo",
+      "razon": "Valora favorablemente tanto el talento individual en el regate como el esfuerzo y entrega en el campo.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d861",
+      "fecha_utc": "2026-11-06T11:05:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Se desempeña como extremo zurdo e integra habitualmente la selección nacional colombiana.",
+      "sentimiento": "neutro",
+      "razon": "Describe la posición táctica y filiación internacional del futbolista de manera meramente informativa.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d862",
+      "fecha_utc": "2026-11-06T11:10:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Su definición de cara al arco rival continúa siendo inconsistente y desperdicia oportunidades claras.",
+      "sentimiento": "negativo",
+      "razon": "Manifiesta insatisfacción por la falta de efectividad y precisión al momento de rematar a portería.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    }
+  ]
 }

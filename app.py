@@ -3,6 +3,7 @@ Tribuna Global - Aplicación de Percepción de Futbolistas
 Construida con Streamlit, LangChain y Salida Estructurada con Pydantic.
 """
 
+import json
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -123,7 +124,7 @@ tab_opinar, tab_consultar = st.tabs(["💬 Emitir opinión", "📊 Consultar opi
 with tab_opinar:
     st.subheader(f"Opinando sobre: **{jugador_seleccionado['nombre']}** ({jugador_seleccionado['pais']})")
     st.markdown(
-        "Escribe tu opinión objetiva, crítica o elogio sobre este futbolista. "
+        "Escribe tu opinión objetiva, crítica o elogio sobre este futbolista (entre 5 y 1000 caracteres). "
         "El sistema analizará el sentimiento con IA y lo guardará en el registro persistente."
     )
     
@@ -148,7 +149,7 @@ with tab_opinar:
     texto_usuario = st.chat_input(f"Escribe tu opinión sobre {jugador_seleccionado['nombre']}...")
 
     if texto_usuario:
-        # 1. Congelar la selección del jugador en el instante del envío
+        # 1. Congelar la selección del jugador en el instante exacto del envío
         jugador_envio = {
             "id": jugador_seleccionado["id"],
             "nombre": jugador_seleccionado["nombre"],
@@ -235,7 +236,7 @@ with tab_opinar:
 
 
 # =========================================================
-# SECCIÓN 2: CONSULTAR OPINIONES (Vista de Registros Persistidos)
+# SECCIÓN 2: CONSULTAR OPINIONES (Auditoría y Filtros)
 # =========================================================
 with tab_consultar:
     st.subheader("📊 Registros Persistidos en Disco")
@@ -251,20 +252,20 @@ with tab_consultar:
     if not opiniones_existentes:
         st.info("ℹ️ No hay opiniones registradas aún en el archivo persistente.")
     else:
-        # Controles de filtrado
-        col1, col2 = st.columns(2)
+        # Fila de filtros
+        col_f1, col_f2 = st.columns(2)
         
-        with col1:
-            # Selector de filtro por jugador
-            nombres_con_opiniones = sorted(list({op["jugador_nombre"] for op in opiniones_existentes if "jugador_nombre" in op}))
+        with col_f1:
+            # Lista única de jugadores presentes en los registros
+            nombres_en_db = sorted(list({op["jugador_nombre"] for op in opiniones_existentes if "jugador_nombre" in op}))
             filtro_jugador_nombre = st.selectbox(
-                "Filtrar por Jugador:",
-                options=["Todos"] + nombres_con_opiniones
+                "🔍 Filtrar por Futbolista:",
+                options=["Todos"] + nombres_en_db
             )
             
-        with col2:
+        with col_f2:
             filtro_sentimiento = st.selectbox(
-                "Filtrar por Sentimiento:",
+                "🏷️ Filtrar por Sentimiento:",
                 options=["Todos", "positivo", "negativo", "neutro", "mixto"]
             )
             
@@ -276,24 +277,55 @@ with tab_consultar:
                     jugador_id_filtro = op.get("jugador_id")
                     break
 
-        # Ejecutar consulta en memoria
+        # Ejecutar consulta y filtrado en memoria
         opiniones_filtradas = consultar_opiniones(
             registros=opiniones_existentes,
             jugador_id=jugador_id_filtro,
             sentimiento=None if filtro_sentimiento == "Todos" else filtro_sentimiento
         )
         
-        # Métricas rápidas
-        st.markdown(f"**Total de opiniones encontradas:** `{len(opiniones_filtradas)}`")
-        
+        # Conteo y desglose por categoría de los resultados filtrados
+        total_filtradas = len(opiniones_filtradas)
+        conteo_positivo = sum(1 for op in opiniones_filtradas if op.get("sentimiento") == "positivo")
+        conteo_negativo = sum(1 for op in opiniones_filtradas if op.get("sentimiento") == "negativo")
+        conteo_neutro = sum(1 for op in opiniones_filtradas if op.get("sentimiento") == "neutro")
+        conteo_mixto = sum(1 for op in opiniones_filtradas if op.get("sentimiento") == "mixto")
+
+        # Visualización de métricas
+        st.markdown("### Resumen Estadístico")
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("📋 Total Filtradas", total_filtradas)
+        m2.metric("🟢 Positivos", conteo_positivo)
+        m3.metric("🔴 Negativos", conteo_negativo)
+        m4.metric("⚪ Neutros", conteo_neutro)
+        m5.metric("🟡 Mixtos", conteo_mixto)
+
+        st.markdown("---")
+
         if not opiniones_filtradas:
-            st.warning("No se encontraron opiniones que coincidan con los filtros seleccionados.")
+            st.warning("⚠️ No se encontraron opiniones que coincidan con los filtros seleccionados.")
         else:
-            # Desplegar tarjetas de opiniones
-            for op in reversed(opiniones_filtradas):  # Las más recientes primero
+            # Botón para descargar exactamente los datos filtrados en formato JSON
+            json_exportable = json.dumps(opiniones_filtradas, ensure_ascii=False, indent=2)
+            st.download_button(
+                label="📥 Descargar resultados filtrados (JSON)",
+                data=json_exportable,
+                file_name="tribuna_global_opiniones_filtradas.json",
+                mime="application/json",
+                use_container_width=True
+            )
+
+            st.markdown("### Detalle de Opiniones")
+            # Presentar cada opinión con fecha, jugador, opinión original, sentimiento y razón
+            for op in reversed(opiniones_filtradas):
                 sent = op.get("sentimiento", "neutro")
                 badge = BADGES_SENTIMIENTO.get(sent, sent)
-                with st.expander(f"{badge} - {op.get('jugador_nombre')} ({op.get('fecha_utc')[:10]})", expanded=False):
+                fecha_formato = op.get("fecha_utc", "")[:19].replace("T", " ")
+                
+                with st.expander(f"{badge} | {op.get('jugador_nombre')} | 📅 {fecha_formato} UTC", expanded=True):
                     st.markdown(f"**Opinión original:** *\"{op.get('opinion_original')}\"*")
-                    st.markdown(f"**Justificación:** {op.get('razon')}")
-                    st.caption(f"**ID:** `{op.get('id')}` | **Modelo:** `{op.get('modelo')}` | **Versión Prompt:** `{op.get('version_prompt')}`")
+                    st.markdown(f"**Justificación de IA:** {op.get('razon')}")
+                    st.caption(
+                        f"🆔 `{op.get('id')}` | 👤 ID Futbolista: `{op.get('jugador_id')}` | "
+                        f"🤖 Modelo: `{op.get('modelo')}` | 📝 Versión Prompt: `{op.get('version_prompt')}`"
+                    )
