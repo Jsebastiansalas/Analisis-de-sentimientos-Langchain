@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tribuna Global - AI Fan Sentiment Telemetry</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config verbatum -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#3b4a3f",
+            "on-secondary": "#003543",
+            "primary-fixed-dim": "#00e38f",
+            "surface-container-low": "#0d1c2d",
+            "secondary-fixed-dim": "#47d6ff",
+            "tertiary": "#fff0ef",
+            "on-primary-fixed": "#002111",
+            "secondary": "#a5e7ff",
+            "primary-container": "#00f59b",
+            "secondary-fixed": "#b6ebff",
+            "inverse-on-surface": "#233143",
+            "surface-dim": "#051424",
+            "tertiary-container": "#ffcaca",
+            "surface-container-high": "#1c2b3c",
+            "on-secondary-fixed-variant": "#004e60",
+            "inverse-surface": "#d4e4fa",
+            "on-surface-variant": "#b9cbbd",
+            "on-tertiary": "#680017",
+            "on-primary": "#003920",
+            "error-container": "#93000a",
+            "surface-bright": "#2c3a4c",
+            "outline": "#849588",
+            "tertiary-fixed": "#ffdada",
+            "on-secondary-container": "#00566a",
+            "secondary-container": "#00d2ff",
+            "surface-container-lowest": "#010f1f",
+            "surface": "#051424",
+            "on-background": "#d4e4fa",
+            "on-tertiary-container": "#bc0032",
+            "on-primary-container": "#006b41",
+            "on-secondary-fixed": "#001f28",
+            "on-error": "#690005",
+            "on-primary-fixed-variant": "#005231",
+            "on-tertiary-fixed-variant": "#920024",
+            "surface-container-highest": "#273647",
+            "surface-tint": "#00e38f",
+            "on-error-container": "#ffdad6",
+            "inverse-primary": "#006d42",
+            "error": "#ffb4ab",
+            "tertiary-fixed-dim": "#ffb3b4",
+            "primary": "#cdffdc",
+            "on-tertiary-fixed": "#40000b",
+            "primary-fixed": "#53ffab",
+            "surface-variant": "#273647",
+            "on-surface": "#d4e4fa",
+            "background": "#051424",
+            "surface-container": "#122131"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "margin-desktop": "2.5rem",
+            "gutter": "1.25rem",
+            "space-xl": "2.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "margin-tablet": "1.5rem",
+            "gutter-desktop": "1.5rem"
+          },
+          "fontFamily": {
+            "headline-xl": [
+              "Outfit"
+            ],
+            "label-md": [
+              "Inter"
+            ],
+            "headline-sm": [
+              "Outfit"
+            ],
+            "label-lg": [
+              "Inter"
+            ],
+            "label-sm": [
+              "Inter"
+            ],
+            "headline-xl-mobile": [
+              "Outfit"
+            ],
+            "body-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-lg": [
+              "Outfit"
+            ],
+            "headline-lg-mobile": [
+              "Outfit"
+            ],
+            "body-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "metric-display": [
+              "Outfit"
+            ],
+            "headline-md": [
+              "Outfit"
+            ],
+            "body-md": [
+              "Plus Jakarta Sans"
+            ]
+          },
+          "fontSize": {
+            "headline-xl": [
+              "3rem",
+              {
+                "lineHeight": "3.5rem",
+                "letterSpacing": "-0.03em",
+                "fontWeight": "800"
+              }
+            ],
+            "label-md": [
+              "0.75rem",
+              {
+                "lineHeight": "1rem",
+                "letterSpacing": "0.04em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-sm": [
+              "1.25rem",
+              {
+                "lineHeight": "1.75rem",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "label-lg": [
+              "0.875rem",
+              {
+                "lineHeight": "1.25rem",
+                "letterSpacing": "0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "label-sm": [
+              "0.6875rem",
+              {
+                "lineHeight": "0.875rem",
+                "letterSpacing": "0.06em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-xl-mobile": [
+              "2rem",
+              {
+                "lineHeight": "2.375rem",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "800"
+              }
+            ],
+            "body-lg": [
+              "1.125rem",
+              {
+                "lineHeight": "1.75rem",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-lg": [
+              "2.25rem",
+              {
+                "lineHeight": "2.75rem",
+                "letterSpacing": "-0.025em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-lg-mobile": [
+              "1.75rem",
+              {
+                "lineHeight": "2.125rem",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ],
+            "body-sm": [
+              "0.875rem",
+              {
+                "lineHeight": "1.25rem",
+                "fontWeight": "400"
+              }
+            ],
+            "metric-display": [
+              "2.5rem",
+              {
+                "lineHeight": "2.75rem",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "800"
+              }
+            ],
+            "headline-md": [
+              "1.5rem",
+              {
+                "lineHeight": "2rem",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md": [
+              "1rem",
+              {
+                "lineHeight": "1.5rem",
+                "fontWeight": "400"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Stadium Floodlight Cone Ambient Aura */
+    .stadium-cone-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(0, 245, 155, 0.12) 0%, rgba(0, 210, 255, 0.04) 40%, rgba(1, 15, 31, 0) 75%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(1, 15, 31, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(132, 149, 136, 0.3);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 245, 155, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-surface-container-lowest">
+<!-- Pitch Base Radial Illumination -->
+<div class="fixed inset-0 pointer-events-none stadium-cone-glow z-0"></div>
+<!-- MAIN WRAPPER -->
+<div class="relative z-10 flex flex-col min-h-screen">
+<!-- 1. TopNavBar (Executed from Shared Components JSON) -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-space-xl py-space-sm bg-surface-container-lowest/85 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+<!-- Brand & Identity -->
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high/80 border border-primary-container/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,245,155,0.3)]">
+<span class="material-symbols-outlined text-primary-container text-2xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-headline-sm font-headline-xl tracking-tight text-primary-container drop-shadow-[0_0_12px_rgba(0,245,155,0.4)]">Tribuna Global</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm font-bold bg-primary-container/15 text-primary-container border border-primary-container/30 tracking-wider">LIVE AI</span>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase opacity-80">AI Fan Sentiment Telemetry</p>
+</div>
+</div>
+<!-- Segmented Tab Switcher Navigation (Shared Components mapping) -->
+<nav class="hidden lg:flex items-center bg-surface-container-low/90 p-1 rounded-xl border border-outline-variant/30 shadow-inner">
+<button class="flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md transition-all duration-200 bg-surface-container-high text-primary-container shadow-[0_0_12px_rgba(0,245,155,0.25)] border border-primary-container/40" id="tab-btn-opinion" onclick="switchTab('opinion')">
+<span class="material-symbols-outlined text-lg" data-weight="fill" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span>Emitir Opinión</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200" id="tab-btn-audit" onclick="switchTab('audit')">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span>Consultar Opiniones</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high/40 transition-colors duration-150">
+<span class="material-symbols-outlined text-lg">monitoring</span>
+<span>Métricas Vivo</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high/40 transition-colors duration-150">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+<span>Auditoría AI</span>
+</button>
+</nav>
+</div>
+<!-- Right Telemetry & Status Badges -->
+<div class="flex items-center gap-space-md">
+<!-- Live AI System Indicator -->
+<div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container/60 border border-outline-variant/40">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-container"></span>
+</span>
+<span class="text-label-sm font-label-sm text-on-surface">AI Online • v2.4 Llama-Vision</span>
+</div>
+<!-- Latency pill -->
+<div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container/60 border border-outline-variant/30 text-secondary-container">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span class="text-label-sm font-label-sm tracking-wide font-mono">24ms</span>
+</div>
+<!-- Trailing Actions from JSON -->
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30">
+<button class="w-9 h-9 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-primary-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-xl">notifications_active</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-primary-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-xl">sensors</span>
+</button>
+<!-- Analyst Profile -->
+<div class="flex items-center gap-2.5 pl-2 cursor-pointer group">
+<img class="w-9 h-9 rounded-full object-cover border-2 border-primary-container/40 group-hover:border-primary-container shadow-[0_0_10px_rgba(0,245,155,0.3)] transition-all" data-alt="Professional sports telemetry analyst in modern broadcast studio attire with dark navy tactical jacket, illuminated by neon stadium green backdrop reflection, high-tech athletic facility, dark cyberpunk sports analytics aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM2BYnPGTB2cSG9Bk14wfkG-NF7ZzKOK2TbWib-hyxTEpQV6zvqrjYPZtO9URRP7nWw9q2osKB2LVYINBlEtjpUWNJb-TvY8b53BLPsj-9sfHbLCdhWYz297oFlY9Cw-zEt5OB3eNguSRno4jcv7wumg_iCrD6R7zg7KMLIecblZAY6p5JeL-qSJtNpMzrpMVAJQfLqSKgu9t7byxps2GkFcrq39k3cupJu45w-yNJs5-1aMFsYZ3zoLA8MfYnek9cfxBeSUhtvfUU"/>
+<div class="hidden xl:block text-left">
+<p class="text-label-sm font-label-sm font-bold text-on-surface group-hover:text-primary-container transition-colors leading-none">Carlos Varela</p>
+<span class="text-[10px] text-on-surface-variant leading-none font-mono">Analista Senior</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- CONTENT WORKSPACE: SideNav + Main Viewport -->
+<div class="flex-1 flex overflow-hidden">
+<!-- 2. Left SideNav: Plantel Global / Player Selector (Executed from Shared Components JSON) -->
+<aside class="w-80 shrink-0 bg-surface-container-low/95 backdrop-blur-2xl border-r border-outline-variant/20 flex flex-col justify-between shadow-[4px_0_24px_rgba(0,0,0,0.5)] z-20">
+<!-- Header & Search Input -->
+<div class="p-4 border-b border-outline-variant/30">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-xl">groups</span>
+                Plantel Global
+              </h2>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Índice de Sentimiento AI</p>
+</div>
+<button class="px-2 py-1 rounded bg-primary-container/10 border border-primary-container/30 text-primary-container text-label-sm font-label-sm hover:bg-primary-container/20 transition-all">
+              + Añadir
+            </button>
+</div>
+<!-- Footballer Search Input -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-lg">search</span>
+<input class="w-full bg-surface-container-lowest/90 border border-outline-variant/40 rounded-lg pl-9 pr-3 py-1.5 text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-secondary-container focus:ring-1 focus:ring-secondary-container transition-all" placeholder="Buscar figura o selección..." type="text"/>
+</div>
+</div>
+<!-- Players List (Rich Cards & JSON Exact Match Tab Labels) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
+<!-- Card 1: Lionel Messi (Active Selection) -->
+<div class="group relative rounded-xl p-3 border-l-2 border-primary-container bg-surface-container-high/70 text-primary-container shadow-[0_4px_16px_rgba(0,245,155,0.08)] cursor-pointer transition-all duration-150">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-11 h-11 rounded-lg object-cover border border-primary-container/40" data-alt="Argentine legendary footballer Lionel Messi focused look on dark pitch, wearing light modern sportswear, illuminated by emerald stadium floodlight accents, cinematic football telemetry aesthetic, ultra crisp detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMrM_9CWOjH8LaesUjVWMp62uy8dfVkCKTSftsXLz4TXm2To6EaO3OdAt7-b0jJpm4vHGxCZ8cuTKMUqXpHV4ePs2rCkmE9S2oVL5qmbZdJXP3ZfXbN5I9r0YDw-8I14u0pwTNys4ApLvDHz8pUdaEqv6XAsuRUyiXIq6AlluCoM3-pulJ2Eq0PcK9jiegXp6SC7ZcSTkx6teRvEmdf96kgPXcRpjOEs3MraOzNM7lF9wE8qMRJYckgCm0NqfnxHmLTb9_13x4Bvrf"/>
+<span class="absolute -bottom-1 -right-1 text-xs">🇦🇷</span>
+</div>
+<div>
+<h3 class="text-label-lg font-label-lg text-primary font-bold tracking-tight">Lionel Messi</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant font-mono">Inter Miami • #10</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-primary-container/15 text-primary-container border border-primary-container/40 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                88% Positivo
+              </span>
+</div>
+<!-- Mini sentiment progress telemetry -->
+<div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
+<span>Menciones 24h: <strong class="text-on-surface">42.8k</strong></span>
+<span class="text-primary-container flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs">trending_up</span> Top Tendencia
+              </span>
+</div>
+</div>
+<!-- Card 2: Cristiano Ronaldo -->
+<div class="group relative rounded-xl p-3 bg-surface-container/40 hover:bg-surface-container-high/60 border border-outline-variant/20 text-on-surface-variant hover:text-on-surface transition-all duration-150 cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-11 h-11 rounded-lg object-cover border border-outline-variant/40" data-alt="Portuguese international star Cristiano Ronaldo looking concentrated in stadium night lights, neon cyan highlights, razor sharp sports portrait, dark carbon background tone with cinematic illumination." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA431CUyRsfZOpj8gGU-3ihJNH4pv43uyOXgbSMsInxJeCm8O8UaVDfKIAAB14fX3j9daHKc_u4jUoshwvq2N8-Ai-TWsuXJz1mA98eN_EoyQZhvF4md3kEmDl4x6I2XchGX3kmZsCgb8VmoTRordleEjPv4X_DGCTGfmuFd1Lnh45JpXIsBmQ8CcE7KWZGhIRABbD1eo_7UD-fb9_M6OsE_VaU0cIwmDjLjvX6N1hLP_rNbe494ZhzxEdHl4Jxl5TqhRIJMIW3Pl8g"/>
+<span class="absolute -bottom-1 -right-1 text-xs">🇵🇹</span>
+</div>
+<div>
+<h3 class="text-label-lg font-label-lg text-on-surface font-semibold">Cristiano Ronaldo</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant font-mono">Al-Nassr • #7</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-primary-container/10 text-primary-container border border-primary-container/30">
+                82% Positivo
+              </span>
+</div>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
+<span>Opiniones: <strong class="text-on-surface">12.4k</strong></span>
+<span class="text-secondary-fixed-dim">Al-Nassr vs Al-Hilal</span>
+</div>
+</div>
+<!-- Card 3: Kylian Mbappé -->
+<div class="group relative rounded-xl p-3 bg-surface-container/40 hover:bg-surface-container-high/60 border border-outline-variant/20 text-on-surface-variant hover:text-on-surface transition-all duration-150 cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-11 h-11 rounded-lg object-cover border border-outline-variant/40" data-alt="French forward Kylian Mbappe in white kit under intense stadium floodlight beams, dark athletic atmosphere, focused expression, high contrast sports modernism style, electric cyan sports mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnNPeplKANN-FF4KBPhObiA5hgCR72rB9KI6UOVNSqjf4R6vOTKnNb4mjL4OAhTkzS8xfyuainrVGEag9Fo0Ay211CkM_m6UaGbfDZgfVW1982hcW7rs2abkVSVT9QtyQzVR0wSBeOks8u0qeW_vZxC1RDwsmxdRUoinFBcTkWFUPfsUNzOb7-hmLCrT6pb7qv0opKeqrjoRcPL0zUhO3Vk5vovYK23nx_wPKOR8DdZFmZVDXe04eybh9VKS9X8umaqDrD5spEQgWT"/>
+<span class="absolute -bottom-1 -right-1 text-xs">🇫🇷</span>
+</div>
+<div>
+<h3 class="text-label-lg font-label-lg text-on-surface font-semibold">Kylian Mbappé</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant font-mono">Real Madrid • #9</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[#FFB703]/15 text-[#FFB703] border border-[#FFB703]/30">
+                64% Mixto
+              </span>
+</div>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
+<span>Menciones: <strong class="text-on-surface">31.2k</strong></span>
+<span class="text-tertiary-fixed-dim">Derbi Buzz</span>
+</div>
+</div>
+<!-- Card 4: Luis Díaz -->
+<div class="group relative rounded-xl p-3 bg-surface-container/40 hover:bg-surface-container-high/60 border border-outline-variant/20 text-on-surface-variant hover:text-on-surface transition-all duration-150 cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-11 h-11 rounded-lg object-cover border border-outline-variant/40" data-alt="Colombian winger Luis Diaz celebrating under night floodlights, intense determination, dark Anfield pitch background, volumetric stadium light fog with neon mint reflections, professional sports editorial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLlGa5nXw1QfmgRF_uLNgXAt-GdOXnmTpEhnOX0-MyrXEvastD39J-ElLSnYb1ISaXQuTmJZ9ouj4pOiMdUWXlss7u95_7pTAIxD1MPzAqwGoQJBuBLTp6HoyJPH5X9rw1Xq_W36zrhX1QLZ82kU7W5D-osLKs6gnr8OT7yhNYXM3hn8IgPidMf8ktyE2Lq4apgCD_DW5w-gpMeedwSkZhD5ezf_qIUVIIF6Koev1mCmTL5JiI2P99ewL8WShcN5XNmbO2W5BUvQzT"/>
+<span class="absolute -bottom-1 -right-1 text-xs">🇨🇴</span>
+</div>
+<div>
+<h3 class="text-label-lg font-label-lg text-on-surface font-semibold">Luis Díaz</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant font-mono">Liverpool • #7</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-primary-container/15 text-primary-container border border-primary-container/40">
+                91% Positivo
+              </span>
+</div>
+<div class="mt-2.5 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
+<span>Top Sparkline</span>
+<span class="text-primary-container font-bold">+18% vs semana pas.</span>
+</div>
+</div>
+<!-- Card 5: Jude Bellingham & Haaland compact item -->
+<div class="p-2.5 rounded-xl bg-surface-container/20 border border-outline-variant/20 hover:bg-surface-container-high/40 transition-all cursor-pointer flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">sports_soccer</span>
+<span class="text-label-sm font-label-sm text-on-surface">Jude Bellingham / E. Haaland</span>
+</div>
+<span class="text-[11px] text-on-surface-variant font-mono">Monitoreando</span>
+</div>
+</div>
+<!-- Sidebar Footer (JSON Exact: Configuracion Telemetria & Almacenamiento Persistente) -->
+<div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest/60">
+<div class="flex items-center justify-between text-label-sm font-label-sm mb-2 text-on-surface-variant font-mono">
+<span>Telemetría Indexada</span>
+<span class="text-primary-container font-bold">148,920 Ops</span>
+</div>
+<div class="space-y-1">
+<button class="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/60 transition-all">
+<span class="material-symbols-outlined text-secondary-container text-base">database</span>
+<span>Almacenamiento Persistente: <span class="text-primary-container font-mono">Activo</span></span>
+</button>
+<button class="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/60 transition-all">
+<span class="material-symbols-outlined text-outline text-base">tune</span>
+<span>Configuración Telemetría</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- 3. MAIN VIEWPORT (Demonstrable Split Views) -->
+<main class="flex-1 flex flex-col h-[calc(100vh-65px)] overflow-hidden bg-background/50">
+<!-- ========================================== -->
+<!-- VIEW A: Emitir Opinión (Chat & Live Stream) -->
+<!-- ========================================== -->
+<div class="flex-1 flex flex-col h-full overflow-hidden" id="view-opinion">
+<!-- Stream Header Banner -->
+<div class="px-space-xl py-space-md border-b border-outline-variant/20 bg-surface-container-lowest/60 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center border border-primary-container/40 shadow-[0_0_20px_rgba(0,245,155,0.2)]">
+<span class="material-symbols-outlined text-primary-container text-3xl">psychology</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-headline-sm font-headline-sm text-on-surface">Análisis de Sentimiento en Tiempo Real</h1>
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary-container/15 text-primary-container border border-primary-container/30">MONITOR ACTIVO</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+                  Evaluando impacto táctico y percepción global para: <strong class="text-primary font-semibold">Lionel Messi</strong>
+</p>
+</div>
+</div>
+<!-- Real-time dynamic stats ticker -->
+<div class="hidden xl:flex items-center gap-6">
+<div class="text-right">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase tracking-wider font-mono">Precisión del Modelo</div>
+<div class="text-headline-sm font-headline-sm text-primary-container font-mono">98.4%</div>
+</div>
+<div class="h-8 w-px bg-outline-variant/40"></div>
+<div class="text-right">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase tracking-wider font-mono">Tasa de Ingesta</div>
+<div class="text-headline-sm font-headline-sm text-secondary-container font-mono">142 op/min</div>
+</div>
+</div>
+</div>
+<!-- Feed of fan submissions (Scrollable Container) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-space-xl py-space-lg space-y-space-md">
+<!-- Comment 1: Positive (Messi) -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-white/5 hover:border-primary-container/30 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary-container/20 border border-primary-container/40 flex items-center justify-center text-primary-container font-bold text-sm">
+                    AF
+                  </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Andrés Fernández</span>
+<span class="text-[11px] text-on-surface-variant font-mono">@albiceleste_tactics</span>
+<span class="text-[10px] text-outline font-mono">• Minuto 68' vs LA Galaxy</span>
+</div>
+<span class="text-[11px] text-secondary-container font-mono">Nodo: Estadio Dignity Health Sports Park</span>
+</div>
+</div>
+<!-- Sentiment Tag: Positivo - 94% Confianza -->
+<span class="shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(0,245,155,0.12)] text-primary-container border border-[rgba(0,245,155,0.3)] shadow-[0_0_12px_rgba(0,245,155,0.25)] flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                  Positivo • 94% Confianza
+                </span>
+</div>
+<!-- Fan text -->
+<p class="mt-3 text-body-md font-body-md text-on-surface pl-12 border-l-2 border-outline-variant/30 italic">
+                “¡Qué exhibición táctica de Messi! A los 37 años sigue viendo pases que ningún otro jugador en el mundo puede anticipar.”
+              </p>
+<!-- AI Justification card -->
+<div class="mt-3.5 ml-12 rounded-lg bg-surface-container-high/60 p-3 border border-outline-variant/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary-container text-lg mt-0.5">auto_awesome</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+<strong class="text-primary font-semibold">Justificación AI:</strong> La opinión destaca atributos técnicos extraordinarios (visión de juego, atemporalidad) con tono entusiasta y admirativo.
+                  </p>
+</div>
+<div class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-lowest/80 text-[11px] font-mono text-primary-container border border-primary-container/20">
+<span class="material-symbols-outlined text-xs">save</span>
+                  💾 Almacenado en disco persistente (ID: #OP-88219)
+                </div>
+</div>
+</div>
+<!-- Comment 2: Mixed (Ronaldo) -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-white/5 hover:border-[#FFB703]/30 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#FFB703]/20 border border-[#FFB703]/40 flex items-center justify-center text-[#FFB703] font-bold text-sm">
+                    MR
+                  </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Mateo Ramos</span>
+<span class="text-[11px] text-on-surface-variant font-mono">@scouting_iberico</span>
+<span class="text-[10px] text-outline font-mono">• Post-partido Riyadh Derby</span>
+</div>
+<span class="text-[11px] text-secondary-container font-mono">Nodo: Al-Awwal Park</span>
+</div>
+</div>
+<!-- Sentiment Tag: Mixto - 71% Confianza -->
+<span class="shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(255,183,3,0.12)] text-[#FFB703] border border-[rgba(255,183,3,0.3)] shadow-[0_0_12px_rgba(255,183,3,0.2)] flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#FFB703]"></span>
+                  Mixto • 71% Confianza
+                </span>
+</div>
+<!-- Fan text -->
+<p class="mt-3 text-body-md font-body-md text-on-surface pl-12 border-l-2 border-outline-variant/30 italic">
+                “Ronaldo sigue marcando goles pero a veces el equipo se ve condicionado por su presión alta.”
+              </p>
+<!-- AI Justification card -->
+<div class="mt-3.5 ml-12 rounded-lg bg-surface-container-high/60 p-3 border border-outline-variant/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[#FFB703] text-lg mt-0.5">balance</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+<strong class="text-[#FFB703] font-semibold">Justificación AI:</strong> Elogio de efectividad goleadora contrastado con objeción táctica sobre la intensidad defensiva.
+                  </p>
+</div>
+<div class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-lowest/80 text-[11px] font-mono text-[#FFB703] border border-[#FFB703]/20">
+<span class="material-symbols-outlined text-xs">save</span>
+                  💾 Almacenado en disco persistente (ID: #OP-88220)
+                </div>
+</div>
+</div>
+<!-- Comment 3: Negative (Mbappe) -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-white/5 hover:border-[#FF3B57]/30 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#FF3B57]/20 border border-[#FF3B57]/40 flex items-center justify-center text-[#FF3B57] font-bold text-sm">
+                    JL
+                  </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Julio Lozano</span>
+<span class="text-[11px] text-on-surface-variant font-mono">@madridista_front</span>
+<span class="text-[10px] text-outline font-mono">• Minuto 82' vs Atlético</span>
+</div>
+<span class="text-[11px] text-secondary-container font-mono">Nodo: Santiago Bernabéu</span>
+</div>
+</div>
+<!-- Sentiment Tag: Negativo - 89% Confianza -->
+<span class="shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(255,59,87,0.12)] text-[#FF3B57] border border-[rgba(255,59,87,0.3)] shadow-[0_0_12px_rgba(255,59,87,0.25)] flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#FF3B57]"></span>
+                  Negativo • 89% Confianza
+                </span>
+</div>
+<!-- Fan text -->
+<p class="mt-3 text-body-md font-body-md text-on-surface pl-12 border-l-2 border-outline-variant/30 italic">
+                “El arbitraje condicionó totalmente el rendimiento de Mbappé en el clásico, una vergüenza la falta de criterio.”
+              </p>
+<!-- AI Justification card -->
+<div class="mt-3.5 ml-12 rounded-lg bg-surface-container-high/60 p-3 border border-outline-variant/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[#FF3B57] text-lg mt-0.5">report_problem</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+<strong class="text-[#FF3B57] font-semibold">Justificación AI:</strong> Crítica severa al arbitraje con vocabulario de indignación ("vergüenza", "falta de criterio").
+                  </p>
+</div>
+<div class="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-lowest/80 text-[11px] font-mono text-[#FF3B57] border border-[#FF3B57]/20">
+<span class="material-symbols-outlined text-xs">save</span>
+                  💾 Almacenado en disco persistente (ID: #OP-88221)
+                </div>
+</div>
+</div>
+</div>
+<!-- Interactive Bottom Floating Dispatcher / Submission Box -->
+<div class="px-space-xl py-space-md bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant/30">
+<div class="max-w-6xl mx-auto rounded-xl bg-surface-container-low/95 p-3.5 border border-outline-variant/30 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary-container text-base">edit_note</span>
+<span>Ingresar nueva opinión para procesamiento de inferencia Llama-Vision:</span>
+<span class="px-2 py-0.5 rounded bg-primary-container/10 text-primary-container font-mono text-[10px] font-bold">LIONEL MESSI (#10)</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline font-mono" id="char-counter">
+                  142 / 1000 caracteres (Mínimo 5)
+                </span>
+</div>
+<!-- Input Area -->
+<div class="relative">
+<textarea class="w-full bg-surface-container-lowest/95 border border-outline-variant/40 rounded-lg p-3 text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-secondary-container focus:ring-1 focus:ring-secondary-container resize-none transition-all" id="fan-input" placeholder="Escribe tu opinión sobre el rendimiento de este jugador..." rows="2">La capacidad asociativa que demostró en los últimos 20 metros desarticuló por completo la línea de 5 rival. Decisivo una vez más en transición ofensiva.</textarea>
+</div>
+<!-- Bottom Bar Actions -->
+<div class="mt-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="text-label-sm font-label-sm text-outline hover:text-on-surface px-2.5 py-1 rounded transition-colors" type="button">
+                    Limpiar
+                  </button>
+<span class="text-outline/40">|</span>
+<label class="flex items-center gap-1.5 text-[11px] font-mono text-on-surface-variant cursor-pointer">
+<input checked="" class="rounded border-outline-variant bg-surface-container text-primary-container focus:ring-0" type="checkbox"/>
+                    Almacenamiento persistente inmediato en BD
+                  </label>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-lg border border-secondary-container/40 text-secondary-container text-label-sm font-label-sm hover:bg-secondary-container/10 transition-all flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-sm">tune</span>
+                    Filtros Telemetría
+                  </button>
+<!-- Primary Action: Neon Match Pulse -->
+<button class="px-5 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-md font-bold hover:shadow-[0_0_20px_rgba(0,245,155,0.45)] active:scale-95 transition-all flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-lg" data-weight="fill" style="font-variation-settings: 'FILL' 1;">send</span>
+                    Analizar &amp; Guardar
+                  </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- VIEW B: Consultar Opiniones (Audit Table & Metrics) -->
+<!-- ========================================== -->
+<div class="hidden flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar p-space-xl space-y-space-lg" id="view-audit">
+<!-- Section Title & Telemetry Export CTA -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-headline-sm font-headline-sm text-on-surface">Base de Datos de Telemetría y Auditoría</h1>
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-secondary-container/15 text-secondary-container border border-secondary-container/30">AUDIT READY</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+                Registros consolidados de sentimiento fanático, validaciones algorítmicas y persistencia en disco.
+              </p>
+</div>
+<!-- Export JSON prominent action -->
+<button class="px-4 py-2 rounded-lg border border-secondary-container/50 bg-secondary-container/10 text-secondary-container hover:bg-secondary-container/20 text-label-md font-label-md transition-all shadow-[0_0_15px_rgba(0,210,255,0.15)] flex items-center gap-2 self-start md:self-auto">
+<span class="material-symbols-outlined text-xl">download</span>
+<span>📥 Descargar JSON</span>
+</button>
+</div>
+<!-- 4 Neon Metric KPI Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1: Opiniones Totales -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-white/5 hover:border-secondary-container/40 transition-all shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-mono">Opiniones Totales</span>
+<span class="material-symbols-outlined text-secondary-container text-xl">database</span>
+</div>
+<div class="text-metric-display font-metric-display text-on-surface">148,920</div>
+<div class="mt-1 flex items-center gap-1.5 text-label-sm font-label-sm text-primary-container font-mono">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs ayer</span>
+<span class="text-on-surface-variant text-[11px] ml-auto">Indexadas</span>
+</div>
+</div>
+<!-- KPI 2: Favorable / Positivo -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-primary-container/20 hover:border-primary-container/50 transition-all shadow-[0_0_24px_rgba(0,245,155,0.08)]">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-mono">Índice Favorable</span>
+<span class="material-symbols-outlined text-primary-container text-xl">thumb_up</span>
+</div>
+<div class="text-metric-display font-metric-display text-primary-container">78.4%</div>
+<div class="mt-1 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant font-mono">
+<span>116,753 opiniones</span>
+<span class="text-primary-container">Dominante</span>
+</div>
+</div>
+<!-- KPI 3: Polémica / Mixto -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-[#FFB703]/20 hover:border-[#FFB703]/50 transition-all shadow-[0_0_24px_rgba(255,183,3,0.08)]">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-mono">Polémica / Mixto</span>
+<span class="material-symbols-outlined text-[#FFB703] text-xl">swap_vert</span>
+</div>
+<div class="text-metric-display font-metric-display text-[#FFB703]">14.2%</div>
+<div class="mt-1 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant font-mono">
+<span>21,146 opiniones</span>
+<span class="text-[#FFB703]">Táctico</span>
+</div>
+</div>
+<!-- KPI 4: Desfavorables -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-md p-space-md border border-[#FF3B57]/20 hover:border-[#FF3B57]/50 transition-all shadow-[0_0_24px_rgba(255,59,87,0.08)]">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-mono">Desfavorables</span>
+<span class="material-symbols-outlined text-[#FF3B57] text-xl">thumb_down</span>
+</div>
+<div class="text-metric-display font-metric-display text-[#FF3B57]">7.4%</div>
+<div class="mt-1 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant font-mono">
+<span>11,021 opiniones</span>
+<span class="text-[#FF3B57]">Arbitraje</span>
+</div>
+</div>
+</div>
+<!-- Analytical Filter Bar -->
+<div class="p-3.5 rounded-xl bg-surface-container-low/90 border border-outline-variant/30 flex flex-wrap items-center gap-3">
+<!-- Player selector -->
+<div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline text-lg">person</span>
+<select class="bg-transparent text-label-sm font-label-sm text-on-surface focus:outline-none border-none p-0 pr-6 cursor-pointer">
+<option class="bg-surface-container" value="all">Todos los Jugadores</option>
+<option class="bg-surface-container" selected="" value="messi">Lionel Messi</option>
+<option class="bg-surface-container" value="ronaldo">Cristiano Ronaldo</option>
+<option class="bg-surface-container" value="mbappe">Kylian Mbappé</option>
+<option class="bg-surface-container" value="diaz">Luis Díaz</option>
+</select>
+</div>
+<!-- Sentiment category -->
+<div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline text-lg">filter_alt</span>
+<select class="bg-transparent text-label-sm font-label-sm text-on-surface focus:outline-none border-none p-0 pr-6 cursor-pointer">
+<option class="bg-surface-container" value="all">Todos los Sentimientos</option>
+<option class="bg-surface-container" value="pos">Positivo (Favorable)</option>
+<option class="bg-surface-container" value="mix">Mixto (Polémica)</option>
+<option class="bg-surface-container" value="neg">Negativo (Crítico)</option>
+</select>
+</div>
+<!-- Date Range Selector -->
+<div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-outline-variant/30 text-label-sm font-label-sm text-on-surface">
+<span class="material-symbols-outlined text-outline text-lg">calendar_today</span>
+<span>Últimas 24 Horas (En Vivo)</span>
+</div>
+<!-- Search in opinions -->
+<div class="flex-1 min-w-[200px] relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-sm">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg pl-8 pr-3 py-1 text-label-sm font-label-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-secondary-container" placeholder="Filtrar por palabra clave o ID de registro..." type="text"/>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-bright text-label-sm font-label-sm text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">refresh</span>
+              Actualizar
+            </button>
+</div>
+<!-- Analytical Audit Table -->
+<div class="rounded-xl border border-outline-variant/30 bg-surface-container-low/70 backdrop-blur-xl overflow-hidden shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/30 bg-surface-container-high/60 text-label-sm font-label-sm text-on-surface-variant font-mono uppercase tracking-wider">
+<th class="py-3 px-4">ID Persistente</th>
+<th class="py-3 px-4">Jugador</th>
+<th class="py-3 px-4">Extracto de Opinión</th>
+<th class="py-3 px-4">Sentimiento</th>
+<th class="py-3 px-4 text-center">Confianza AI</th>
+<th class="py-3 px-4 font-mono">Timestamp</th>
+<th class="py-3 px-4 text-right">Persistencia</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20 text-body-sm font-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary-container text-label-sm font-bold">#OP-88219</td>
+<td class="py-3.5 px-4 font-semibold text-primary">Lionel Messi</td>
+<td class="py-3.5 px-4 text-on-surface max-w-xs truncate" title="¡Qué exhibición táctica de Messi! A los 37 años sigue viendo pases que ningún otro jugador en el mundo puede anticipar.">
+                      “¡Qué exhibición táctica de Messi! A los 37 años sigue viendo pases...”
+                    </td>
+<td class="py-3.5 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(0,245,155,0.12)] text-primary-container border border-[rgba(0,245,155,0.3)]">
+                        Positivo
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-center font-mono text-primary-container font-semibold">94.2%</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant text-[11px]">Hoy 21:42:10 UTC</td>
+<td class="py-3.5 px-4 text-right font-mono text-[11px] text-primary-container">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Sincronizado
+                      </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary-container text-label-sm font-bold">#OP-88220</td>
+<td class="py-3.5 px-4 font-semibold text-on-surface">Cristiano Ronaldo</td>
+<td class="py-3.5 px-4 text-on-surface max-w-xs truncate" title="Ronaldo sigue marcando goles pero a veces el equipo se ve condicionado por su presión alta.">
+                      “Ronaldo sigue marcando goles pero a veces el equipo se ve condicionado...”
+                    </td>
+<td class="py-3.5 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(255,183,3,0.12)] text-[#FFB703] border border-[rgba(255,183,3,0.3)]">
+                        Mixto
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-center font-mono text-[#FFB703] font-semibold">71.8%</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant text-[11px]">Hoy 21:40:02 UTC</td>
+<td class="py-3.5 px-4 text-right font-mono text-[11px] text-primary-container">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Sincronizado
+                      </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary-container text-label-sm font-bold">#OP-88221</td>
+<td class="py-3.5 px-4 font-semibold text-on-surface">Kylian Mbappé</td>
+<td class="py-3.5 px-4 text-on-surface max-w-xs truncate" title="El arbitraje condicionó totalmente el rendimiento de Mbappé en el clásico, una vergüenza la falta de criterio.">
+                      “El arbitraje condicionó totalmente el rendimiento de Mbappé en el clásico...”
+                    </td>
+<td class="py-3.5 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(255,59,87,0.12)] text-[#FF3B57] border border-[rgba(255,59,87,0.3)]">
+                        Negativo
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-center font-mono text-[#FF3B57] font-semibold">89.4%</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant text-[11px]">Hoy 21:38:45 UTC</td>
+<td class="py-3.5 px-4 text-right font-mono text-[11px] text-primary-container">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Sincronizado
+                      </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary-container text-label-sm font-bold">#OP-88222</td>
+<td class="py-3.5 px-4 font-semibold text-primary">Luis Díaz</td>
+<td class="py-3.5 px-4 text-on-surface max-w-xs truncate">
+                      “Desborde imparable por la banda izquierda, dejó sin cintura al lateral y clavó golazo.”
+                    </td>
+<td class="py-3.5 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(0,245,155,0.12)] text-primary-container border border-[rgba(0,245,155,0.3)]">
+                        Positivo
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-center font-mono text-primary-container font-semibold">96.0%</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant text-[11px]">Hoy 21:35:19 UTC</td>
+<td class="py-3.5 px-4 text-right font-mono text-[11px] text-primary-container">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Sincronizado
+                      </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-3.5 px-4 font-mono text-secondary-container text-label-sm font-bold">#OP-88223</td>
+<td class="py-3.5 px-4 font-semibold text-on-surface">Jude Bellingham</td>
+<td class="py-3.5 px-4 text-on-surface max-w-xs truncate">
+                      “Sólido en la contención de mitad de cancha aunque hoy estuvo menos participativo en área rival.”
+                    </td>
+<td class="py-3.5 px-4">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-[rgba(148,163,184,0.12)] text-[#94A3B8] border border-[rgba(148,163,184,0.25)]">
+                        Neutro
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-center font-mono text-on-surface-variant font-semibold">83.5%</td>
+<td class="py-3.5 px-4 font-mono text-on-surface-variant text-[11px]">Hoy 21:30:40 UTC</td>
+<td class="py-3.5 px-4 text-right font-mono text-[11px] text-primary-container">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Sincronizado
+                      </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table pagination & footer info -->
+<div class="px-4 py-3 bg-surface-container-lowest/70 border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-label-sm font-label-sm text-on-surface-variant font-mono">
+<div>Mostrando 1 - 5 de 148,920 registros persistidos</div>
+<div class="flex items-center gap-2">
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/30 hover:bg-surface-container-high text-on-surface transition-colors">Anterior</button>
+<span class="px-2 py-1 text-primary-container font-bold">Página 1</span>
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/30 hover:bg-surface-container-high text-on-surface transition-colors">Siguiente</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- Interactive Logic for Tab Switching & Character Count -->
+<script>
+    function switchTab(viewId) {
+      const viewOpinion = document.getElementById('view-opinion');
+      const viewAudit = document.getElementById('view-audit');
+      const btnOpinion = document.getElementById('tab-btn-opinion');
+      const btnAudit = document.getElementById('tab-btn-audit');
+
+      if (viewId === 'opinion') {
+        viewOpinion.classList.remove('hidden');
+        viewAudit.classList.add('hidden');
+
+        // Style active opinion
+        btnOpinion.className = "flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md transition-all duration-200 bg-surface-container-high text-primary-container shadow-[0_0_12px_rgba(0,245,155,0.25)] border border-primary-container/40";
+        btnAudit.className = "flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200";
+      } else {
+        viewOpinion.classList.add('hidden');
+        viewAudit.classList.remove('hidden');
+
+        // Style active audit
+        btnAudit.className = "flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md transition-all duration-200 bg-surface-container-high text-primary-container shadow-[0_0_12px_rgba(0,245,155,0.25)] border border-primary-container/40";
+        btnOpinion.className = "flex items-center gap-2 px-space-md py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200";
+      }
+    }
+
+    // Dynamic character counter
+    const fanInput = document.getElementById('fan-input');
+    const charCounter = document.getElementById('char-counter');
+    if (fanInput && charCounter) {
+      fanInput.addEventListener('input', (e) => {
+        const len = e.target.value.length;
+        charCounter.textContent = `${len} / 1000 caracteres (Mínimo 5)`;
+        if (len < 5) {
+          charCounter.classList.add('text-error');
+        } else {
+          charCounter.classList.remove('text-error');
+        }
+      });
+    }
+  </script>
+</body></html>
