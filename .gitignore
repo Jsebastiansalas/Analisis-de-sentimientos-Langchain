@@ -20,3 +20,4 @@ datos/*.tmp
 Thumbs.db
 __MACOSX/
 test_sandbox_datos/
+intermedio/
