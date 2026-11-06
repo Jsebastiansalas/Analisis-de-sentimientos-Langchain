@@ -1,11 +1,12 @@
 """
 Módulo de análisis de sentimiento con LangChain y Pydantic para Tribuna Global.
 Contiene el modelo de datos estructurado, la construcción del prompt con roles,
-la defensa contra prompt injections y la invocación de la cadena LCEL.
+la defensa contra prompt injections y la invocación de la cadena LCEL compatible
+con OpenAI y Google Gemini (vía endpoint OpenAI-compatible).
 """
 
 import os
-from typing import Literal, Optional
+from typing import Literal, Optional, Tuple
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
@@ -135,6 +136,44 @@ def crear_prompt_analisis() -> ChatPromptTemplate:
     ])
 
 
+def resolver_configuracion_proveedor(
+    modelo: Optional[str] = None,
+    api_key: Optional[str] = None
+) -> Tuple[str, str, Optional[str]]:
+    """
+    Detecta automáticamente si la clave corresponde a Google Gemini o OpenAI,
+    configurando el endpoint base y modelo adecuado.
+    """
+    if api_key is not None:
+        clave = api_key.strip()
+    else:
+        clave = (os.getenv("OPENAI_API_KEY") or os.getenv("GEMINI_API_KEY") or "").strip()
+
+    if not clave or clave in ("clave_configurada_localmente", ""):
+        raise ValueError(
+            "No se ha configurado una API Key válida (OpenAI o Gemini). Por favor configúrala en el archivo .env o en la barra lateral."
+        )
+
+    base_url_env = os.getenv("OPENAI_BASE_URL")
+    
+    # Detección automática de Google Gemini:
+    es_gemini = (
+        clave.startswith("AQ.")
+        or clave.startswith("AIza")
+        or (base_url_env and "googleapis.com" in base_url_env)
+        or (modelo and "gemini" in modelo.lower())
+    )
+
+    if es_gemini:
+        base_url = base_url_env or "https://generativelanguage.googleapis.com/v1beta/openai/"
+        nombre_modelo = modelo or os.getenv("OPENAI_MODEL") or "gemini-2.5-flash"
+    else:
+        base_url = base_url_env
+        nombre_modelo = modelo or os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
+
+    return nombre_modelo, clave, base_url
+
+
 def obtener_cadena_analisis(
     modelo: Optional[str] = None,
     api_key: Optional[str] = None
@@ -142,22 +181,20 @@ def obtener_cadena_analisis(
     """
     Construye la cadena LCEL (LangChain Expression Language) vinculando
     el prompt y el modelo con salida estructurada.
+    Compatible con OpenAI y Google Gemini.
     """
-    nombre_modelo = modelo or DEFAULT_MODEL
-    clave = api_key or os.getenv("OPENAI_API_KEY")
-
-    if not clave or clave == "clave_configurada_localmente":
-        raise ValueError(
-            "No se ha configurado una OPENAI_API_KEY válida. Por favor configúrala en el archivo .env."
-        )
+    nombre_modelo, clave, base_url = resolver_configuracion_proveedor(modelo=modelo, api_key=api_key)
 
     # Se usa temperature=0 para reducir variabilidad y asegurar determinismo
-    llm = ChatOpenAI(
-        model=nombre_modelo,
-        temperature=0.0,
-        openai_api_key=clave
-    )
+    kwargs = {
+        "model": nombre_modelo,
+        "temperature": 0.0,
+        "api_key": clave
+    }
+    if base_url:
+        kwargs["base_url"] = base_url
 
+    llm = ChatOpenAI(**kwargs)
     prompt = crear_prompt_analisis()
     modelo_estructurado = llm.with_structured_output(AnalisisOpinion)
     
@@ -179,7 +216,7 @@ def analizar_opinion(
     
     Lanza:
         ValueError: Si la entrada o la salida no cumplen con las reglas.
-        RuntimeError: Si ocurre un error al comunicarse con el proveedor del modelo (OpenAI).
+        RuntimeError: Si ocurre un error al comunicarse con el proveedor del modelo (OpenAI / Gemini).
     """
     opinion_limpia = validar_texto_opinion(texto_opinion)
     

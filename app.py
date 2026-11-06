@@ -81,20 +81,35 @@ with st.sidebar:
     st.header("⚙️ Configuración del Sistema")
     
     # Manejo de API Key: prioriza .env, permite input si no está configurada
-    env_api_key = os.getenv("OPENAI_API_KEY", "")
+    env_api_key = os.getenv("OPENAI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")
     if env_api_key and env_api_key != "clave_configurada_localmente":
         api_key_activa = env_api_key
-        st.success("🔑 API Key detectada desde `.env`")
+        if api_key_activa.startswith("AQ.") or api_key_activa.startswith("AIza") or "gemini" in os.getenv("OPENAI_MODEL", "").lower():
+            st.success("🔑 API Key de **Google Gemini** activa")
+        else:
+            st.success("🔑 API Key de **OpenAI** activa")
     else:
         api_key_activa = st.text_input(
-            "OpenAI API Key:",
+            "API Key (Gemini u OpenAI):",
             type="password",
-            help="Ingresa tu clave de OpenAI si no la has colocado en el archivo .env"
+            help="Ingresa tu clave de Google Gemini o OpenAI si no la has colocado en el archivo .env"
         )
+    
+    es_gemini = (
+        api_key_activa.startswith("AQ.")
+        or api_key_activa.startswith("AIza")
+        or "gemini" in os.getenv("OPENAI_MODEL", "").lower()
+    )
+    
+    opciones_modelos = (
+        ["gemini-2.5-flash", "gemini-2.5-pro", "gpt-4o-mini", "gpt-4o"]
+        if es_gemini
+        else [DEFAULT_MODEL, "gpt-4o", "gemini-2.5-flash", "gpt-3.5-turbo"]
+    )
     
     modelo_seleccionado = st.selectbox(
         "Modelo de IA:",
-        options=[DEFAULT_MODEL, "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
+        options=opciones_modelos,
         index=0
     )
     
