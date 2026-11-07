@@ -19,5 +19,10 @@ datos/*.tmp
 .DS_Store
 Thumbs.db
 __MACOSX/
+# Sandboxes temporales de tests
 test_sandbox_datos/
-intermedio/
+test_sandbox_sprint3/
+test_sandbox_ampliaciones/
+
+# Material de clase y borradores antiguos
+docs/material_clase/

@@ -71,29 +71,37 @@ El sistema supera las limitaciones de una interfaz monolítica ofreciendo **dos 
 
 ## 📁 Estructura del Proyecto
 
+El proyecto está organizado siguiendo una **Arquitectura en Capas Limpia (Clean Architecture)**:
+
 ```text
 intermedio/
-├── api.py              # Backend REST API con FastAPI y servicio de archivos estáticos.
-├── app.py              # Aplicación web interactiva en Streamlit.
-├── analisis.py         # Inferencia IA con LangChain: Gemini 2.5 Flash / GPT-4o-mini y Pydantic.
-├── almacenamiento.py   # Persistencia atómica con rename atómico, catálogo y consultas en memoria.
-├── static/
-│   ├── index.html      # SPA moderna responsiva con Tailwind CSS.
-│   └── app.js          # Lógica frontend: peticiones Fetch, renderizado y Chart.js.
-├── datos/
+├── app.py              # Capa de Presentación: Aplicación interactiva en Streamlit (Rúbrica).
+├── api.py              # Capa de Presentación: Backend REST API con FastAPI.
+├── analisis.py         # Capa de Negocio / IA: Inferencia con LangChain, Pydantic y roles.
+├── almacenamiento.py   # Capa de Acceso a Datos: Persistencia atómica (.tmp + replace) y catálogo.
+├── datos/              # Capa de Persistencia JSON
 │   ├── politicos.json  # Catálogo oficial de 20 figuras políticas colombianas (IDs p001-p020).
 │   ├── jugadores.json  # Catálogo de compatibilidad futbolística (IDs j001-j020).
-│   └── opiniones.json  # Base de persistencia atómica con 12 registros semilla distribuidos.
-├── test_sprint1.py     # Suite de pruebas Sprint 1 (Persistencia y Catálogo).
-├── test_sprint2.py     # Suite de pruebas Sprint 2 (Pydantic, Longitud y Anti-Inyección).
-├── test_sprint3.py     # Suite de pruebas Sprint 3 (Congelamiento de selección y pertinencia).
-├── test_sprint4.py     # Suite de pruebas Sprint 4 (Semilla >=12, 4 categorías y métricas).
+│   └── opiniones.json  # Base persistente atómica con 12 registros semilla distribuidos.
+├── static/             # Frontend Web Moderno (Single Page Application)
+│   ├── index.html      # SPA responsiva moderna con Tailwind CSS y SweetAlert2.
+│   └── app.js          # Lógica frontend: peticiones Fetch asíncronas y Chart.js.
+├── tests/              # Suite de Pruebas Unitarias Automatizadas
+│   ├── __init__.py     # Inicializador y configuración de resolución sys.path.
+│   ├── test_sprint1.py # Tests Sprint 1 (Persistencia atómica y catálogo).
+│   ├── test_sprint2.py # Tests Sprint 2 (Pydantic, longitud y defensa anti-inyección).
+│   ├── test_sprint3.py # Tests Sprint 3 (Congelamiento de selección y pertinencia).
+│   ├── test_sprint4.py # Tests Sprint 4 (Semilla >=12, 4 categorías y métricas).
+│   └── test_ampliaciones.py # Tests Desafíos Sección 12 (Texto libre y Human-in-the-Loop).
+├── docs/               # Documentación y Recursos de Soporte
+│   ├── stitch_frontend.html # Prototipo y código de diseño Google Stitch.
+│   └── material_clase/ # Archivos y ejercicios complementarios de la cátedra.
 ├── Dockerfile          # Imagen Docker optimizada y no-root para producción.
-├── docker-compose.yml  # Orquestación multi-contenedor (FastAPI puerto 8000 + Streamlit puerto 8501).
+├── docker-compose.yml  # Orquestación multi-contenedor (FastAPI :8000 + Streamlit :8501).
 ├── requirements.txt    # Dependencias fijadas del proyecto.
 ├── .env                # Variables de entorno con API Keys (Gemini / OpenAI).
 ├── .env.example        # Plantilla pública sin credenciales.
-├── .gitignore          # Archivos ignorados por Git.
+├── .gitignore          # Reglas de exclusión de Git.
 └── README.md           # Documentación técnica integral.
 ```
 
@@ -216,9 +224,9 @@ El archivo `datos/politicos.json` incluye mandatarios de la historia de Colombia
 
 ## 🧪 Ejecución de la Suite de Pruebas
 
-El sistema cuenta con **23 pruebas unitarias automatizadas** que validan todos los criterios de los 4 Sprints y las extensiones avanzadas de la Sección 12:
+El sistema cuenta con **23 pruebas unitarias automatizadas** ubicadas en la carpeta `tests/` que validan todos los criterios de los 4 Sprints y las extensiones avanzadas de la Sección 12:
 ```bash
-py -3.14 -m unittest discover -p "test_*.py" -v
+py -3.14 -m unittest discover tests -v
 ```
 
 ```text

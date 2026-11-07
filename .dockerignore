@@ -20,9 +20,11 @@ __pycache__/
 datos/*.tmp
 test_sandbox_datos/
 test_sandbox_sprint3/
+test_sandbox_ampliaciones/
 
-# Basura del sistema operativo y copias de clase
+# Basura del sistema operativo, documentación pesada y material de clase
 __MACOSX/
-intermedio/
+docs/
+tests/
 .DS_Store
 Thumbs.db
