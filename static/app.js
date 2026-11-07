@@ -340,9 +340,13 @@ function agregarMensajeNoPertinenteChat(razon) {
 async function cargarAuditoria() {
   const politicoId = document.getElementById("filtro-analytics-politico")?.value || "todos";
   const sentimiento = document.getElementById("filtro-analytics-sentimiento")?.value || "todos";
+  const texto = document.getElementById("filtro-analytics-texto")?.value || "";
 
   try {
-    const url = `/api/opiniones?politico_id=${politicoId}&sentimiento=${sentimiento}`;
+    let url = `/api/opiniones?politico_id=${politicoId}&sentimiento=${sentimiento}`;
+    if (texto.trim()) {
+      url += `&q=${encodeURIComponent(texto.trim())}`;
+    }
     const res = await fetch(url);
     if (!res.ok) throw new Error("Fallo al obtener opiniones");
     const data = await res.json();
@@ -476,7 +480,7 @@ function renderizarTablaAuditoria(opiniones) {
   tbody.innerHTML = "";
 
   if (opiniones.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500 font-inter">No se encontraron opiniones para los filtros seleccionados.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500 font-inter">No se encontraron opiniones para los filtros seleccionados.</td></tr>`;
     return;
   }
 
@@ -487,20 +491,95 @@ function renderizarTablaAuditoria(opiniones) {
     neutro: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/10 text-slate-300 border border-slate-500/30">Neutro</span>`
   };
 
-  opiniones.slice(-15).reverse().forEach((op) => {
+  opiniones.slice(-20).reverse().forEach((op) => {
     const tr = document.createElement("tr");
     tr.className = "hover:bg-carbon/50 transition-colors";
     const fecha = (op.fecha_utc || "").slice(0, 19).replace("T", " ");
+
+    const badgeHumano = op.sentimiento_corregido
+      ? `<span class="block text-[9px] text-cyanNeon font-mono mt-1">✏️ Auditado (Orig: ${op.sentimiento_original})</span>`
+      : "";
 
     tr.innerHTML = `
       <td class="py-2.5 px-4 font-mono text-[11px] text-slate-400">${fecha}</td>
       <td class="py-2.5 px-4 font-semibold text-white">${op.jugador_nombre || ""}</td>
       <td class="py-2.5 px-4 italic text-slate-300 max-w-xs truncate" title="${op.opinion_original}">“${op.opinion_original}”</td>
-      <td class="py-2.5 px-4">${badges[op.sentimiento] || op.sentimiento}</td>
+      <td class="py-2.5 px-4">
+        ${badges[op.sentimiento] || op.sentimiento}
+        ${badgeHumano}
+      </td>
       <td class="py-2.5 px-4 text-slate-300 text-[11px]">${op.razon || ""}</td>
+      <td class="py-2.5 px-4 text-center">
+        <button onclick="abrirModalCorreccion('${op.id}', '${op.sentimiento}')" class="px-2 py-1 rounded bg-cyanNeon/10 hover:bg-cyanNeon/25 text-cyanNeon border border-cyanNeon/30 text-[11px] font-mono transition-all">
+          ✏️ Auditar
+        </button>
+      </td>
     `;
     tbody.appendChild(tr);
   });
+}
+
+/**
+ * Modal SweetAlert2 para Human-in-the-Loop
+ */
+async function abrirModalCorreccion(id, sentimientoActual) {
+  const { value: formValues } = await Swal.fire({
+    title: "Auditoría Humana (Human-in-the-Loop)",
+    background: "#0E1726",
+    color: "#d4e4fa",
+    html: `
+      <p class="text-xs text-slate-400 mb-3 text-left">Corrige la etiqueta del sentimiento asignada por la IA preservando el valor original (Sección 12 Rúbrica):</p>
+      <label class="block text-xs text-cyanNeon text-left mb-1 font-bold">Nuevo Sentimiento:</label>
+      <select id="swal-sentimiento" class="w-full bg-[#051424] text-white p-2 rounded border border-white/20 mb-3 text-xs">
+        <option value="positivo" ${sentimientoActual === "positivo" ? "selected" : ""}>🟢 Positivo</option>
+        <option value="negativo" ${sentimientoActual === "negativo" ? "selected" : ""}>🔴 Negativo</option>
+        <option value="neutro" ${sentimientoActual === "neutro" ? "selected" : ""}>⚪ Neutro</option>
+        <option value="mixto" ${sentimientoActual === "mixto" ? "selected" : ""}>🟡 Mixto</option>
+      </select>
+      <label class="block text-xs text-cyanNeon text-left mb-1 font-bold">Justificación de la corrección:</label>
+      <input id="swal-justificacion" placeholder="Ej: Se identificó ironía o doble sentido..." class="w-full bg-[#051424] text-white p-2 rounded border border-white/20 text-xs">
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: "Guardar Corrección",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#00F59B",
+    cancelButtonColor: "#FF3B57",
+    preConfirm: () => {
+      return {
+        nuevo_sentimiento: document.getElementById("swal-sentimiento").value,
+        justificacion: document.getElementById("swal-justificacion").value
+      };
+    }
+  });
+
+  if (formValues) {
+    try {
+      const res = await fetch(`/api/opiniones/${id}/corregir`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formValues)
+      });
+      if (!res.ok) throw new Error("Fallo al guardar corrección");
+      Swal.fire({
+        icon: "success",
+        title: "¡Corrección Guardada!",
+        text: "Se actualizó la opinión preservando el historial original.",
+        background: "#0E1726",
+        color: "#d4e4fa",
+        confirmButtonColor: "#00F59B"
+      });
+      cargarAuditoria();
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: e.message,
+        background: "#0E1726",
+        color: "#d4e4fa"
+      });
+    }
+  }
 }
 
 /**

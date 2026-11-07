@@ -16,10 +16,12 @@ from almacenamiento import (
     crear_registro,
     guardar_opinion,
     consultar_opiniones,
+    corregir_opinion,
     RUTA_OPINIONES
 )
 from analisis import (
     analizar_opinion,
+    comparar_analisis,
     validar_texto_opinion,
     MIN_CARACTERES,
     MAX_CARACTERES,
@@ -323,6 +325,14 @@ with st.sidebar:
     st.caption("ℹ️ **Temperatura:** `0.0` (Determinismo analítico estricto).")
     
     st.markdown("---")
+    st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #cdffdc;'>🔬 EXTENSIONES (SECCIÓN 12)</p>", unsafe_allow_html=True)
+    activar_benchmarking = st.checkbox(
+        "Modo Benchmarking Dual",
+        value=False,
+        help="Compara en paralelo dos configuraciones de inferencia para medir el consenso analítico (Desafío Sección 12)."
+    )
+    
+    st.markdown("---")
     if st.button("🗑️ Nueva conversación", use_container_width=True):
         st.session_state.mensajes = []
         st.toast("Sesión de chat reiniciada. Los registros persistidos se mantienen intactos.")
@@ -407,6 +417,20 @@ with tab_opinar:
                 </span>
                 """ if msg.get("guardado", False) else ""
                 
+                benchmarking_html = ""
+                if msg.get("benchmarking"):
+                    b_data = msg["benchmarking"]
+                    consenso_txt = "🟢 Consenso Total de Modelos" if b_data.get("consenso") else "🟡 Discrepancia Detectada"
+                    sent_a = getattr(b_data["analisis_a"], "sentimiento", "N/A")
+                    sent_b = getattr(b_data["analisis_b"], "sentimiento", "N/A")
+                    benchmarking_html = f"""
+                    <div style="background: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; font-size: 0.75rem; font-family: Inter;">
+                        <span style="color: #00d2ff; font-weight: 700;">🔬 Benchmarking Dual (Sección 12):</span> {consenso_txt}<br>
+                        <span style="color: #94a3b8;">• {b_data.get('modelo_a')}:</span> <code style="color: #00f59b;">{sent_a}</code> | 
+                        <span style="color: #94a3b8;">• {b_data.get('modelo_b')}:</span> <code style="color: #00d2ff;">{sent_b}</code>
+                    </div>
+                    """
+
                 st.markdown(f"""
                 <div class="stitch-chat-card" style="border-left: 3px solid #00F59B;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -421,6 +445,7 @@ with tab_opinar:
                             {msg.get('razon', '')}
                         </p>
                     </div>
+                    {benchmarking_html}
                     <div style="display: flex; justify-content: flex-end;">
                         {guardado_html}
                     </div>
@@ -466,12 +491,23 @@ with tab_opinar:
         
         with st.spinner("Ejecutando inferencia de sentimiento con IA..."):
             try:
-                analisis = analizar_opinion(
-                    jugador_nombre=jugador_envio["nombre"],
-                    texto_opinion=texto_limpio,
-                    modelo=modelo_seleccionado,
-                    api_key=api_key_activa
-                )
+                if activar_benchmarking:
+                    bench = comparar_analisis(
+                        jugador_nombre=jugador_envio["nombre"],
+                        texto_opinion=texto_limpio,
+                        modelo_a=modelo_seleccionado,
+                        api_key=api_key_activa
+                    )
+                    analisis = bench["analisis_a"]
+                    bench_data = bench
+                else:
+                    analisis = analizar_opinion(
+                        jugador_nombre=jugador_envio["nombre"],
+                        texto_opinion=texto_limpio,
+                        modelo=modelo_seleccionado,
+                        api_key=api_key_activa
+                    )
+                    bench_data = None
             except ValueError as ve:
                 st.error(f"❌ Error de configuración: {ve}")
                 st.stop()
@@ -488,7 +524,8 @@ with tab_opinar:
                 "es_pertinente": False,
                 "sentimiento": None,
                 "razon": analisis.razon,
-                "guardado": False
+                "guardado": False,
+                "benchmarking": bench_data
             })
         else:
             try:
@@ -505,7 +542,8 @@ with tab_opinar:
                     "es_pertinente": True,
                     "sentimiento": analisis.sentimiento,
                     "razon": analisis.razon,
-                    "guardado": True
+                    "guardado": True,
+                    "benchmarking": bench_data
                 })
             except Exception as err_escritura:
                 st.error(f"❌ Error durante el almacenamiento atómico: {err_escritura}")
@@ -537,12 +575,12 @@ with tab_consultar:
         st.info("ℹ️ No hay opiniones registradas aún en la base de datos.")
     else:
         # Fila de filtros Stitch
-        col_f1, col_f2 = st.columns(2)
+        col_f1, col_f2, col_f3 = st.columns([1.5, 1.5, 2])
         
         with col_f1:
             nombres_en_db = sorted(list({op["jugador_nombre"] for op in opiniones_existentes if "jugador_nombre" in op}))
             filtro_jugador_nombre = st.selectbox(
-                "🔍 Filtrar por Futbolista:",
+                "🔍 Filtrar por Nombre / Figura:",
                 options=["Todos"] + nombres_en_db
             )
             
@@ -550,6 +588,13 @@ with tab_consultar:
             filtro_sentimiento = st.selectbox(
                 "🏷️ Filtrar por Sentimiento:",
                 options=["Todos", "positivo", "negativo", "neutro", "mixto"]
+            )
+
+        with col_f3:
+            filtro_busqueda_texto = st.text_input(
+                "🔎 Buscar palabra clave:",
+                placeholder="Ej: paz, economía, seguridad...",
+                help="Filtra en tiempo real en la opinión, justificación o nombre."
             )
             
         jugador_id_filtro = None
@@ -563,7 +608,8 @@ with tab_consultar:
         opiniones_filtradas = consultar_opiniones(
             registros=opiniones_existentes,
             jugador_id=jugador_id_filtro,
-            sentimiento=None if filtro_sentimiento == "Todos" else filtro_sentimiento
+            sentimiento=None if filtro_sentimiento == "Todos" else filtro_sentimiento,
+            texto_busqueda=filtro_busqueda_texto
         )
         
         # Conteos estadísticos
@@ -582,6 +628,16 @@ with tab_consultar:
         m4.metric("⚪ Neutros", conteo_neu)
         m5.metric("🟡 Mixtos", conteo_mix)
 
+        # Gráfico Estadístico Nativo en Streamlit (Desafío Sección 12 Rúbrica)
+        if total_filtradas > 0:
+            st.markdown("<p style='font-family: Outfit; font-weight: 700; font-size: 0.95rem; color: #cdffdc; margin-top: 14px;'>📊 DISTRIBUCIÓN DE SENTIMIENTOS (GRÁFICA NATIVA)</p>", unsafe_allow_html=True)
+            import pandas as pd
+            df_grafica = pd.DataFrame({
+                "Categoría": ["Positivo", "Negativo", "Neutro", "Mixto"],
+                "Opiniones": [conteo_pos, conteo_neg, conteo_neu, conteo_mix]
+            })
+            st.bar_chart(df_grafica.set_index("Categoría"), color="#00F59B", height=230)
+
         st.markdown("---")
 
         if not opiniones_filtradas:
@@ -596,18 +652,30 @@ with tab_consultar:
                 st.download_button(
                     label="📥 Descargar Telemetría (JSON)",
                     data=json_exportable,
-                    file_name="tribuna_global_opiniones_filtradas.json",
+                    file_name="agora_colombia_opiniones_filtradas.json",
                     mime="application/json",
                     use_container_width=True
                 )
 
-            st.markdown("<h3 style='font-size: 1.15rem; font-weight: 700; color: #cdffdc; margin: 18px 0 10px 0;'>REGISTROS DE AUDITORÍA</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='font-size: 1.15rem; font-weight: 700; color: #cdffdc; margin: 18px 0 10px 0;'>REGISTROS DE AUDITORÍA & HUMAN-IN-THE-LOOP</h3>", unsafe_allow_html=True)
             
             # Despliegue de tarjetas de auditoría Stitch
             for op in reversed(opiniones_filtradas):
                 sent = op.get("sentimiento", "neutro")
                 badge_html = render_stitch_badge(sent)
                 fecha_formato = op.get("fecha_utc", "")[:19].replace("T", " ")
+                
+                badge_humano = ""
+                if op.get("sentimiento_corregido"):
+                    orig_sent = op.get("sentimiento_original", "N/A")
+                    motivo = op.get("justificacion_correccion", "")
+                    badge_humano = f"""
+                    <div style="background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 6px; padding: 6px 12px; margin-bottom: 8px; font-size: 0.75rem; color: #00d2ff; font-family: Inter;">
+                        ✏️ <strong>Reclasificación Humana Aplicada:</strong> <code style="color:#00f59b;">{op.get('sentimiento_corregido')}</code> 
+                        <span style="color: #94a3b8;">(Predicción IA original: <code>{orig_sent}</code>)</span>
+                        {f"<br><span style='color: #cbd5e1;'>Motivo: <em>{motivo}</em></span>" if motivo else ""}
+                    </div>
+                    """
                 
                 st.markdown(f"""
                 <div class="stitch-chat-card" style="margin-bottom: 12px;">
@@ -622,6 +690,7 @@ with tab_consultar:
                         </div>
                         {badge_html}
                     </div>
+                    {badge_humano}
                     <div style="font-size: 0.95rem; color: #d4e4fa; font-style: italic; margin-bottom: 8px; border-left: 2px solid rgba(0,210,255,0.4); padding-left: 10px;">
                         “{op.get('opinion_original')}”
                     </div>
@@ -635,3 +704,27 @@ with tab_consultar:
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+
+                # Auditoría Humana: Formulario de corrección manual (Sección 12 Rúbrica)
+                with st.expander(f"✏️ Corregir / Auditar Clasificación (ID: {op.get('id', '')[:8]})"):
+                    col_c1, col_c2 = st.columns([1, 2])
+                    with col_c1:
+                        nuevo_sent = st.selectbox(
+                            "Sentimiento corregido:",
+                            options=["positivo", "negativo", "neutro", "mixto"],
+                            index=["positivo", "negativo", "neutro", "mixto"].index(sent) if sent in ["positivo", "negativo", "neutro", "mixto"] else 0,
+                            key=f"sel_corr_{op['id']}"
+                        )
+                    with col_c2:
+                        justif_corr = st.text_input(
+                            "Justificación de la corrección:",
+                            placeholder="Ej: Se detectó ironía o ambigüedad fáctica no captada...",
+                            key=f"txt_corr_{op['id']}"
+                        )
+                    if st.button("💾 Guardar Corrección en Disco", key=f"btn_corr_{op['id']}", use_container_width=True):
+                        try:
+                            corregir_opinion(RUTA_OPINIONES, op["id"], nuevo_sent, justif_corr)
+                            st.toast("✅ Clasificación corregida con éxito. Registro auditado.")
+                            st.rerun()
+                        except Exception as e_corr:
+                            st.error(f"Error al corregir: {e_corr}")

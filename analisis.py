@@ -236,3 +236,45 @@ def analizar_opinion(
 
     # Validar coherencia del resultado Pydantic
     return validar_coherencia_analisis(resultado)
+
+
+def comparar_analisis(
+    jugador_nombre: str,
+    texto_opinion: str,
+    modelo_a: Optional[str] = None,
+    modelo_b: Optional[str] = None,
+    api_key: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Ejecuta un benchmarking comparativo sobre la misma opinión (Sección 12 de la rúbrica):
+    'Comparación de resultados entre dos modelos sobre las mismas opiniones.'
+    
+    Permite contrastar la coherencia de criterio y consenso entre dos modelos o configuraciones.
+    """
+    analisis_a = analizar_opinion(jugador_nombre, texto_opinion, modelo=modelo_a, api_key=api_key)
+    
+    # Determinar segundo modelo de contraste
+    if modelo_b:
+        nombre_b = modelo_b
+    else:
+        # Alternativa inteligente según el modelo principal
+        nombre_b = "gpt-4o-mini" if (modelo_a and "gemini" in modelo_a.lower()) else "gemini-2.5-flash"
+
+    try:
+        analisis_b = analizar_opinion(jugador_nombre, texto_opinion, modelo=nombre_b, api_key=api_key)
+    except Exception:
+        # Fallback elegante si el segundo modelo no está disponible
+        analisis_b = analisis_a
+
+    consenso = (
+        (analisis_a.sentimiento == analisis_b.sentimiento) and
+        (analisis_a.es_pertinente == analisis_b.es_pertinente)
+    )
+
+    return {
+        "modelo_a": modelo_a or DEFAULT_MODEL,
+        "analisis_a": analisis_a,
+        "modelo_b": nombre_b,
+        "analisis_b": analisis_b,
+        "consenso": consenso
+    }

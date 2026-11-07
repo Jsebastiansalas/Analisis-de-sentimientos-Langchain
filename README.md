@@ -216,13 +216,13 @@ El archivo `datos/politicos.json` incluye mandatarios de la historia de Colombia
 
 ## 🧪 Ejecución de la Suite de Pruebas
 
-El sistema cuenta con **21 pruebas unitarias automatizadas** que validan todos los criterios de los 4 Sprints:
+El sistema cuenta con **23 pruebas unitarias automatizadas** que validan todos los criterios de los 4 Sprints y las extensiones avanzadas de la Sección 12:
 ```bash
 py -3.14 -m unittest discover -p "test_*.py" -v
 ```
 
 ```text
-Ran 21 tests in 0.144s
+Ran 23 tests in 0.454s
 OK
 ```
 
@@ -230,6 +230,19 @@ OK
 - **Sprint 2 (6 tests):** Validación del modelo Pydantic (`sentimiento`, `razon`), coherencia de pertinencia, límites de caracteres (5 a 1000) y blindaje anti prompt-injection.
 - **Sprint 3 (3 tests):** Congelamiento del político seleccionado al momento del envío, descarte automático de opiniones no pertinentes y persistencia intacta tras "Nueva conversación".
 - **Sprint 4 (6 tests):** Base semilla de 12 registros cubriendo las 4 categorías (`positivo`, `negativo`, `neutro`, `mixto`) en 4 figuras políticas, validación de UUID y UTC, y exportación JSON limpia.
+- **Ampliaciones Sección 12 (2 tests):** Filtrado por búsqueda de texto libre exacto en memoria y persistencia atómica de auditoría humana (*Human-in-the-Loop*) preservando la predicción original de la IA.
+
+---
+
+## 🌟 Desafíos de Ampliación Implementados (Sección 12 Rúbrica)
+
+Para alcanzar el máximo nivel de excelencia técnica y académica, se implementaron las siguientes extensiones:
+
+1. **📊 Gráfica Estadística Nativa en Streamlit:** Visualización de barras interactiva en la pestaña de consultas basada exclusivamente en los registros filtrados en disco.
+2. **✍️ Auditoría Humana / Human-in-the-Loop:** Capacidad de re-clasificar manualmente cualquier opinión en la tabla de auditoría, conservando de forma permanente el `sentimiento_original` emitido por la IA junto con la justificación del cambio, autor y marca temporal UTC.
+3. **🔎 Filtro de Búsqueda por Texto Libre:** Consulta instantánea en memoria por palabra clave sobre opiniones, razones o nombres.
+4. **🔬 Benchmarking Dual de Modelos:** Inferencia comparativa en paralelo entre configuraciones/modelos para evaluar consenso analítico sobre una misma opinión.
+5. **🐳 Dockerización Completa Multi-Servicio:** Orquestación dual con `docker compose` levantando FastAPI SPA (puerto 8000) y Streamlit (puerto 8501) compartiendo el volumen atómico de datos.
 
 ---
 

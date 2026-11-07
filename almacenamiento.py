@@ -211,7 +211,8 @@ def guardar_opinion(ruta: Optional[Path | str], registro: Dict[str, Any]) -> Non
 def consultar_opiniones(
     registros: List[Dict[str, Any]],
     jugador_id: Optional[str] = None,
-    sentimiento: Optional[str] = None
+    sentimiento: Optional[str] = None,
+    texto_busqueda: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """
     Filtra los registros de opiniones en memoria sin realizar ninguna consulta al LLM.
@@ -220,6 +221,7 @@ def consultar_opiniones(
         registros: Lista de opiniones cargadas.
         jugador_id: ID del jugador para filtrar (o None / 'todos' para no filtrar).
         sentimiento: Categoría de sentimiento (o None / 'todos' para no filtrar).
+        texto_busqueda: Término de búsqueda por texto libre (opinión, justificación o nombre).
         
     Retorna:
         Lista de registros que cumplen con todos los criterios de filtrado.
@@ -228,6 +230,7 @@ def consultar_opiniones(
     
     filtro_jugador = jugador_id.lower().strip() if jugador_id else "todos"
     filtro_sentimiento = sentimiento.lower().strip() if sentimiento else "todos"
+    filtro_texto = texto_busqueda.lower().strip() if texto_busqueda else None
 
     for r in registros:
         # Filtro de jugador
@@ -240,6 +243,54 @@ def consultar_opiniones(
             if str(r.get("sentimiento", "")).lower() != filtro_sentimiento:
                 continue
 
+        # Filtro de texto libre (búsqueda en opinión, razón y nombre)
+        if filtro_texto:
+            opinion_txt = str(r.get("opinion_original", "")).lower()
+            razon_txt = str(r.get("razon", "")).lower()
+            nombre_txt = str(r.get("jugador_nombre", "")).lower()
+            if filtro_texto not in opinion_txt and filtro_texto not in razon_txt and filtro_texto not in nombre_txt:
+                continue
+
         resultado.append(r)
 
     return resultado
+
+
+def corregir_opinion(
+    ruta: Optional[Path | str],
+    opinion_id: str,
+    nuevo_sentimiento: str,
+    justificacion: str = "",
+    corregido_por: str = "auditor_humano"
+) -> Dict[str, Any]:
+    """
+    Permite la auditoría humana (Human-in-the-Loop) sobre una opinión clasificada por IA,
+    cumpliendo con los Desafíos de Ampliación de la Sección 12 de la rúbrica oficial:
+    'Corrección manual de etiquetas, conservando la clasificación original y la modificación.'
+    
+    Conserva intacto el sentimiento original emitido por la IA en 'sentimiento_original',
+    actualiza el sentimiento vigente y registra la justificación, autor y fecha UTC.
+    """
+    ruta_archivo = Path(ruta) if ruta else RUTA_OPINIONES
+    data = cargar_opiniones(ruta_archivo)
+    
+    registro_modificado = None
+    for r in data.get("opiniones", []):
+        if r.get("id") == opinion_id:
+            # Preservar clasificación original del modelo si no ha sido guardada antes
+            if "sentimiento_original" not in r:
+                r["sentimiento_original"] = r.get("sentimiento")
+            
+            r["sentimiento"] = nuevo_sentimiento
+            r["sentimiento_corregido"] = nuevo_sentimiento
+            r["justificacion_correccion"] = justificacion.strip()
+            r["fecha_correccion_utc"] = datetime.now(timezone.utc).isoformat()
+            r["corregido_por"] = corregido_por
+            registro_modificado = r
+            break
+            
+    if not registro_modificado:
+        raise KeyError(f"No se encontró ninguna opinión con el ID '{opinion_id}'.")
+        
+    guardar_diccionario_atomico(ruta_archivo, data)
+    return registro_modificado

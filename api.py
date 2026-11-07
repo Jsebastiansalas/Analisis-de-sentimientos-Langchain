@@ -18,6 +18,7 @@ from almacenamiento import (
     crear_registro,
     guardar_opinion,
     consultar_opiniones,
+    corregir_opinion,
     RUTA_OPINIONES
 )
 from analisis import (
@@ -47,6 +48,11 @@ class EnvioOpinionRequest(BaseModel):
     opinion: str = Field(..., min_length=5, max_length=1000, description="Texto de la opinión ciudadana")
 
 
+class CorreccionOpinionRequest(BaseModel):
+    nuevo_sentimiento: str = Field(..., description="Nuevo sentimiento ('positivo', 'negativo', 'neutro', 'mixto')")
+    justificacion: Optional[str] = Field("", description="Justificación de la reclasificación humana")
+
+
 @app.get("/api/politicos", summary="Obtener catálogo de figuras políticas")
 def obtener_politicos():
     """Retorna la lista de figuras políticas colombianas validadas."""
@@ -60,7 +66,8 @@ def obtener_politicos():
 @app.get("/api/opiniones", summary="Consultar opiniones persistidas con métricas")
 def obtener_opiniones(
     politico_id: Optional[str] = Query(None, description="Filtrar por ID de político o 'todos'"),
-    sentimiento: Optional[str] = Query(None, description="Filtrar por categoría de sentimiento o 'todos'")
+    sentimiento: Optional[str] = Query(None, description="Filtrar por categoría de sentimiento o 'todos'"),
+    q: Optional[str] = Query(None, description="Filtrar por palabra clave en opinión o razón")
 ):
     """
     Retorna las opiniones filtradas y un resumen estadístico sincronizado.
@@ -72,7 +79,7 @@ def obtener_opiniones(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al leer base de datos: {e}")
 
-    filtradas = consultar_opiniones(registros, jugador_id=politico_id, sentimiento=sentimiento)
+    filtradas = consultar_opiniones(registros, jugador_id=politico_id, sentimiento=sentimiento, texto_busqueda=q)
 
     # Calcular desglose estadístico
     total = len(filtradas)
@@ -138,6 +145,30 @@ def registrar_opinion(peticion: EnvioOpinionRequest):
         "guardado": analisis.es_pertinente,
         "registro": registro_guardado
     }
+
+
+@app.post("/api/opiniones/{opinion_id}/corregir", summary="Reclasificación manual (Human-in-the-Loop)")
+def corregir_opinion_endpoint(opinion_id: str, peticion: CorreccionOpinionRequest):
+    """
+    Permite a un auditor humano corregir la etiqueta de sentimiento asignada por la IA,
+    preservando el valor original y cumpliendo con los desafíos de ampliación (Sección 12).
+    """
+    validos = {"positivo", "negativo", "neutro", "mixto"}
+    if peticion.nuevo_sentimiento.lower() not in validos:
+        raise HTTPException(status_code=400, detail=f"Sentimiento inválido. Debe ser uno de {validos}")
+
+    try:
+        modificado = corregir_opinion(
+            ruta=RUTA_OPINIONES,
+            opinion_id=opinion_id,
+            nuevo_sentimiento=peticion.nuevo_sentimiento.lower(),
+            justificacion=peticion.justificacion or ""
+        )
+        return {"status": "ok", "registro": modificado}
+    except KeyError as ke:
+        raise HTTPException(status_code=404, detail=str(ke))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al guardar corrección: {e}")
 
 
 @app.get("/api/exportar", summary="Descargar opiniones filtradas en formato JSON")
