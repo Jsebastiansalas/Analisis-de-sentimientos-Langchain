@@ -24,7 +24,7 @@ test_sandbox_ampliaciones/
 
 # Basura del sistema operativo, documentación pesada y material de clase
 __MACOSX/
-docs/
+frontend/material_clase/
 tests/
 .DS_Store
 Thumbs.db

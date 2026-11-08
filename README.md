@@ -83,9 +83,11 @@ intermedio/
 │   ├── politicos.json  # Catálogo oficial de 20 figuras políticas colombianas (IDs p001-p020).
 │   ├── jugadores.json  # Catálogo de compatibilidad futbolística (IDs j001-j020).
 │   └── opiniones.json  # Base persistente atómica con 12 registros semilla distribuidos.
-├── static/             # Frontend Web Moderno (Single Page Application)
-│   ├── index.html      # SPA responsiva moderna con Tailwind CSS y SweetAlert2.
-│   └── app.js          # Lógica frontend: peticiones Fetch asíncronas y Chart.js.
+├── frontend/           # Frontend Web Moderno en React 18 (Arquitectura Impeccable)
+│   ├── index.html      # Shell HTML5 con Tailwind CSS, Lucide Icons, Chart.js y Canvas Confetti.
+│   ├── app.jsx         # Aplicación React 18: Tribuna, Barómetro, Benchmarking Lab y Human-in-the-Loop.
+│   ├── stitch_frontend.html # Prototipo y especificación de diseño Google Stitch.
+│   └── material_clase/ # Archivos y ejercicios complementarios de la cátedra.
 ├── tests/              # Suite de Pruebas Unitarias Automatizadas
 │   ├── __init__.py     # Inicializador y configuración de resolución sys.path.
 │   ├── test_sprint1.py # Tests Sprint 1 (Persistencia atómica y catálogo).
@@ -93,9 +95,9 @@ intermedio/
 │   ├── test_sprint3.py # Tests Sprint 3 (Congelamiento de selección y pertinencia).
 │   ├── test_sprint4.py # Tests Sprint 4 (Semilla >=12, 4 categorías y métricas).
 │   └── test_ampliaciones.py # Tests Desafíos Sección 12 (Texto libre y Human-in-the-Loop).
-├── docs/               # Documentación y Recursos de Soporte
-│   ├── stitch_frontend.html # Prototipo y código de diseño Google Stitch.
-│   └── material_clase/ # Archivos y ejercicios complementarios de la cátedra.
+├── static/             # Frontend alternativo clásico (SPA Vanilla JS)
+│   ├── index.html
+│   └── app.js
 ├── Dockerfile          # Imagen Docker optimizada y no-root para producción.
 ├── docker-compose.yml  # Orquestación multi-contenedor (FastAPI :8000 + Streamlit :8501).
 ├── requirements.txt    # Dependencias fijadas del proyecto.

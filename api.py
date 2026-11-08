@@ -23,6 +23,7 @@ from almacenamiento import (
 )
 from analisis import (
     analizar_opinion,
+    comparar_analisis,
     validar_texto_opinion,
     DEFAULT_MODEL
 )
@@ -51,6 +52,13 @@ class EnvioOpinionRequest(BaseModel):
 class CorreccionOpinionRequest(BaseModel):
     nuevo_sentimiento: str = Field(..., description="Nuevo sentimiento ('positivo', 'negativo', 'neutro', 'mixto')")
     justificacion: Optional[str] = Field("", description="Justificación de la reclasificación humana")
+
+
+class CompararOpinionRequest(BaseModel):
+    politico_id: str = Field(..., description="ID de la figura política objetivo")
+    opinion: str = Field(..., min_length=5, max_length=1000, description="Texto de la opinión para contraste dual")
+    modelo_a: Optional[str] = None
+    modelo_b: Optional[str] = None
 
 
 @app.get("/api/politicos", summary="Obtener catálogo de figuras políticas")
@@ -171,6 +179,42 @@ def corregir_opinion_endpoint(opinion_id: str, peticion: CorreccionOpinionReques
         raise HTTPException(status_code=500, detail=f"Error al guardar corrección: {e}")
 
 
+@app.post("/api/opiniones/comparar", summary="Benchmarking dual de modelos (Sección 12)")
+def comparar_opinion_endpoint(peticion: CompararOpinionRequest):
+    """
+    Ejecuta inferencia dual en paralelo para contrastar dos modelos de IA
+    y evaluar el consenso de clasificación sobre la misma opinión ciudadana.
+    """
+    catalogo = cargar_jugadores()
+    politico_obj = next((p for p in catalogo if p["id"] == peticion.politico_id), None)
+    if not politico_obj:
+        raise HTTPException(status_code=404, detail="Figura política no encontrada en el catálogo.")
+
+    try:
+        texto_limpio = validar_texto_opinion(peticion.opinion)
+        res = comparar_analisis(
+            jugador_nombre=politico_obj["nombre"],
+            texto_opinion=texto_limpio,
+            modelo_a=peticion.modelo_a,
+            modelo_b=peticion.modelo_b
+        )
+        return {
+            "politico": politico_obj["nombre"],
+            "opinion": texto_limpio,
+            "modelo_a": res["modelo_a"],
+            "sentimiento_a": res["analisis_a"].sentimiento,
+            "razon_a": res["analisis_a"].razon,
+            "modelo_b": res["modelo_b"],
+            "sentimiento_b": res["analisis_b"].sentimiento,
+            "razon_b": res["analisis_b"].razon,
+            "consenso": res["consenso"]
+        }
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Fallo en benchmarking dual: {e}")
+
+
 @app.get("/api/exportar", summary="Descargar opiniones filtradas en formato JSON")
 def exportar_opiniones(
     politico_id: Optional[str] = Query(None),
@@ -193,7 +237,10 @@ def exportar_opiniones(
     )
 
 
-# Servir frontend estático si existe la carpeta 'static'
+# Servir frontend: Priorizar 'frontend' (con React) si contiene index.html, de lo contrario 'static'
+frontend_dir = Path(__file__).resolve().parent / "frontend"
 static_dir = Path(__file__).resolve().parent / "static"
-if static_dir.exists():
-    app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="static")
+
+dir_servir = frontend_dir if (frontend_dir / "index.html").exists() else static_dir
+if dir_servir.exists():
+    app.mount("/", StaticFiles(directory=str(dir_servir), html=True), name="frontend")
