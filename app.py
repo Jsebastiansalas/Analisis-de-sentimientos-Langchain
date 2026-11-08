@@ -384,7 +384,7 @@ with tab_opinar:
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <span style="font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-family: 'Inter'; font-weight: 700; letter-spacing: 0.05em;">Foco de Inferencia Actual</span>
-                <div style="font-family: 'Outfit'; font-size: 1.35rem; font-weight: 800; color: #cdffdc;">{bandera_sel} {jugador_seleccionado['nombre']} <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 400;">({jugador_seleccionado['pais']})</span></div>
+                <div style="font-family: 'Outfit'; font-size: 1.35rem; font-weight: 800; color: #cdffdc;">🇨🇴 {jugador_seleccionado['nombre']} <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 400;">({jugador_seleccionado['pais']})</span></div>
             </div>
             <div style="font-size: 0.75rem; color: #94a3b8; font-family: 'Inter'; text-align: right;">
                 Rango permitido: <strong>5 a 1000 caracteres</strong><br>
