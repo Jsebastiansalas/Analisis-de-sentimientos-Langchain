@@ -6,7 +6,7 @@ con OpenAI y Google Gemini (vía endpoint OpenAI-compatible).
 """
 
 import os
-from typing import Literal, Optional, Tuple
+from typing import Literal, Optional, Tuple, Dict, Any
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate

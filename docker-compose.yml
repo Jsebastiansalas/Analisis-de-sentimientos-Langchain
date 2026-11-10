@@ -15,6 +15,11 @@ services:
     volumes:
       - ./datos:/app/datos
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/politicos || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   # Servicio 2: Chatbot y Tablero de Control Académico en Streamlit
   agora_streamlit:
@@ -30,3 +35,8 @@ services:
     volumes:
       - ./datos:/app/datos
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
