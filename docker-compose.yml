@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Servicio 1: Frontend Moderno SPA (FastAPI + HTML5 + Tailwind CSS + Chart.js)
+  # Servicio 1: Frontend Moderno SPA (FastAPI + React 18 + Tailwind CSS + Chart.js)
   agora_web:
     build:
       context: .
@@ -32,6 +32,8 @@ services:
       - "8501:8501"
     env_file:
       - .env
+    environment:
+      - STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
     volumes:
       - ./datos:/app/datos
     restart: unless-stopped
